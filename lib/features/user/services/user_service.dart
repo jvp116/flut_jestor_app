@@ -16,10 +16,7 @@ class UserService {
         'password': password,
       };
 
-      //UserModel user = dson.fromJson(data, UserModel.new);
-
-      // TODO modificar endpoint
-      Response response = await dio.post('$basePath/', data: data);
+      Response response = await dio.post('$basePath/api/v1/auth/authenticate', data: data);
 
       if (response.statusCode == 200) {
         return true;

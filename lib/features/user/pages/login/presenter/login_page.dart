@@ -1,10 +1,8 @@
 import 'package:flut_jestor_app/features/user/pages/login/controller/login_controller.dart';
-import 'package:flut_jestor_app/features/user/states/user_state.dart';
-import 'package:flut_jestor_app/features/user/stores/user_store.dart';
-import 'package:flut_jestor_app/shared/components/custom_text_form_field_widget.dart';
-import 'package:flut_jestor_app/shared/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../../../../../shared/components/custom_text_form_field_widget.dart';
+import '../../../../../shared/utils/constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,8 +21,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    controller.initialize(context.watch<UserStore>());
-
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
@@ -121,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () {
                                   if (controller.formKey.currentState!.validate()) {
                                     setState(() {
-                                      controller.loginUser(controller.emailController.text, controller.hashPassword(controller.passwordController.text));
+                                      controller.loginUser(controller.emailController.text, controller.passwordController.text);
                                     });
                                   }
                                 },
@@ -173,17 +169,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  dynamic configPage() {
-    if (controller.state is LoadingUserState) {
-      // return const LoadingWidget();
-    }
-
-    if (controller.state is ErrorUserState) {
-      // return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
-    }
-
-    if (controller.state is SuccessUserState) {}
   }
 }
