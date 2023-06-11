@@ -1,8 +1,11 @@
-import 'package:flut_jestor_app/features/user/pages/login/controller/login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../shared/components/custom_text_form_field_widget.dart';
-import '../../../../../shared/utils/constants.dart';
+import '../../../shared/components/custom_text_form_field_widget.dart';
+import '../../../shared/utils/constants.dart';
+import '../../services/user_service.dart';
+import '../controller/login_controller.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserService service = Provider.of<UserService>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
@@ -75,10 +80,6 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 24),
                               TextFormField(
-                                controller: controller.passwordController,
-                                obscureText: controller.showPassword == false ? true : false,
-                                enableSuggestions: false,
-                                autocorrect: false,
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.all(0),
                                   border: const UnderlineInputBorder(),
@@ -97,9 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                                             controller.showPassword = !controller.showPassword;
                                           })),
                                 ),
+                                controller: controller.passwordController,
+                                keyboardType: TextInputType.text,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Campo obrigatório!';
+                                    return 'Por favor, digite sua senha';
                                   }
 
                                   if (value.length < 8) {
@@ -108,17 +111,30 @@ class _LoginPageState extends State<LoginPage> {
 
                                   return null;
                                 },
+                                obscureText: controller.showPassword == false ? true : false,
+                                enableSuggestions: false,
+                                autocorrect: false,
                               ),
                             ],
                           ),
                           Column(
                             children: [
                               ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  FocusScopeNode currentFocus = FocusScope.of(context);
                                   if (controller.formKey.currentState!.validate()) {
-                                    setState(() {
-                                      controller.loginUser(controller.emailController.text, controller.passwordController.text);
+                                    controller.login(service, controller.emailController.text, controller.passwordController.text).then((value) {
+                                      if (controller.isValidUser) {
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                                      }
+                                    }).onError((error, stackTrace) {
+                                      controller.passwordController.clear();
+                                      ScaffoldMessenger.of(context).showSnackBar(controller.snackBar);
                                     });
+
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

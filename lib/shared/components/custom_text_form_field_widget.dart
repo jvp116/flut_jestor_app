@@ -15,8 +15,6 @@ class CustomTextFormFieldWidget extends StatelessWidget {
     // Email
     if (typeField == "email") {
       return TextFormField(
-        controller: textController,
-        enableSuggestions: true,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.all(0),
           border: UnderlineInputBorder(),
@@ -27,18 +25,21 @@ class CustomTextFormFieldWidget extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        maxLength: 100,
+        controller: textController,
+        keyboardType: TextInputType.emailAddress,
         validator: (value) {
           if (value!.isEmpty) {
-            return 'Campo obrigatório!';
+            return 'Por favor, digite seu e-mail';
           }
 
           if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
-            return 'E-mail inválido';
+            return 'Por favor, digite um e-mail válido';
           }
 
           return null;
         },
+        enableSuggestions: true,
+        maxLength: 100,
       );
     }
 
@@ -61,7 +62,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
         ),
         validator: (value) {
           if (value!.isEmpty) {
-            return 'Campo obrigatório!';
+            return 'Por favor, digite sua senha';
           }
 
           if (value.length < 8) {

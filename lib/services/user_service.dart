@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dson_adapter/dson_adapter.dart';
 import 'package:flut_jestor_app/models/user_model.dart';
 import 'package:flut_jestor_app/shared/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   final Dio dio;
@@ -9,7 +10,9 @@ class UserService {
 
   UserService(this.dio);
 
-  Future<bool> loginUser(String email, String password) async {
+  Future<bool> login(String email, String password) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     try {
       Map<String, dynamic> data = {
         'email': email,
@@ -19,6 +22,8 @@ class UserService {
       Response response = await dio.post('$basePath/api/v1/auth/authenticate', data: data);
 
       if (response.statusCode == 200) {
+        await sharedPreferences.setString('access_token', (response.data)['access_token']);
+        await sharedPreferences.setString('refresh_token', (response.data)['refresh_token']);
         return true;
       } else {
         return false;

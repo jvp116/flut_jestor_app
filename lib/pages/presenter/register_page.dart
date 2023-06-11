@@ -1,7 +1,8 @@
-import 'package:flut_jestor_app/features/user/pages/login/controller/register_controller.dart';
 import 'package:flut_jestor_app/shared/components/custom_text_form_field_widget.dart';
 import 'package:flut_jestor_app/shared/utils/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../controller/register_controller.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
