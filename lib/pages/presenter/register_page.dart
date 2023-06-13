@@ -1,7 +1,9 @@
 import 'package:flut_jestor_app/shared/components/custom_text_form_field_widget.dart';
 import 'package:flut_jestor_app/shared/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../services/user_service.dart';
 import '../controller/register_controller.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -21,6 +23,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserService service = Provider.of<UserService>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
@@ -77,6 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               TextFormField(
                                 controller: controller.passwordController,
                                 obscureText: controller.showPassword == false ? true : false,
+                                enableInteractiveSelection: false,
                                 enableSuggestions: false,
                                 autocorrect: false,
                                 decoration: InputDecoration(
@@ -99,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Campo obrigatório!';
+                                    return 'Por favor, digite uma senha';
                                   }
 
                                   if (value.length < 8) {
@@ -113,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               TextFormField(
                                 controller: controller.confirmPasswordController,
                                 obscureText: controller.showConfirmPassword == false ? true : false,
+                                enableInteractiveSelection: false,
                                 enableSuggestions: false,
                                 autocorrect: false,
                                 decoration: InputDecoration(
@@ -135,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Campo obrigatório!';
+                                    return 'Por favor, confirme a senha';
                                   }
 
                                   if (value.length < 8) {
@@ -143,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   }
 
                                   if (value != controller.passwordController.text) {
-                                    return "Ops! Parece que as senhas digitadas não correspondem";
+                                    return "Ops! As senhas digitadas não correspondem";
                                   }
 
                                   return null;
@@ -154,8 +160,23 @@ class _RegisterPageState extends State<RegisterPage> {
                           Column(
                             children: [
                               ElevatedButton(
-                                onPressed: () {
-                                  if (controller.formKey.currentState!.validate()) {}
+                                onPressed: () async {
+                                  FocusScopeNode currentFocus = FocusScope.of(context);
+                                  if (controller.formKey.currentState!.validate()) {
+                                    controller.register(service, controller.emailController.text, controller.passwordController.text).then((value) {
+                                      if (controller.isValidUser) {
+                                        Navigator.pushReplacementNamed(context, '/home');
+                                      }
+                                    }).onError((error, stackTrace) {
+                                      controller.passwordController.clear();
+                                      controller.confirmPasswordController.clear();
+                                      ScaffoldMessenger.of(context).showSnackBar(controller.snackBar);
+                                    });
+
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: const Size.fromHeight(56),
@@ -183,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.pushReplacementNamed(context, '/login');
                                 },
                                 child: const Text(
                                   'Voltar',

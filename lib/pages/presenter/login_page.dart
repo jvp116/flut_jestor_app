@@ -5,7 +5,6 @@ import '../../../shared/components/custom_text_form_field_widget.dart';
 import '../../../shared/utils/constants.dart';
 import '../../services/user_service.dart';
 import '../controller/login_controller.dart';
-import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -80,6 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 24),
                               TextFormField(
+                                controller: controller.passwordController,
+                                obscureText: controller.showPassword == false ? true : false,
+                                enableInteractiveSelection: false,
+                                enableSuggestions: false,
+                                autocorrect: false,
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.all(0),
                                   border: const UnderlineInputBorder(),
@@ -98,7 +102,6 @@ class _LoginPageState extends State<LoginPage> {
                                             controller.showPassword = !controller.showPassword;
                                           })),
                                 ),
-                                controller: controller.passwordController,
                                 keyboardType: TextInputType.text,
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -111,9 +114,6 @@ class _LoginPageState extends State<LoginPage> {
 
                                   return null;
                                 },
-                                obscureText: controller.showPassword == false ? true : false,
-                                enableSuggestions: false,
-                                autocorrect: false,
                               ),
                             ],
                           ),
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                                   if (controller.formKey.currentState!.validate()) {
                                     controller.login(service, controller.emailController.text, controller.passwordController.text).then((value) {
                                       if (controller.isValidUser) {
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                                        Navigator.pushReplacementNamed(context, '/home');
                                       }
                                     }).onError((error, stackTrace) {
                                       controller.passwordController.clear();
@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                                   textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).pushNamed('/register');
+                                  Navigator.pushReplacementNamed(context, '/register');
                                 },
                                 child: const Text(
                                   'Cadastrar',

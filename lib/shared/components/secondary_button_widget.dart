@@ -1,5 +1,6 @@
-import 'package:flut_jestor_app/shared/utils/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/constants.dart';
 
 class SecondaryButtonWidget extends StatelessWidget {
   final String text;

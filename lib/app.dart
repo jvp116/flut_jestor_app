@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flut_jestor_app/pages/presenter/home_page.dart';
+import 'package:flut_jestor_app/pages/presenter/login_page.dart';
+import 'package:flut_jestor_app/pages/presenter/register_page.dart';
 import 'package:flut_jestor_app/pages/presenter/welcome_page.dart';
 import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flut_jestor_app/shared/utils/constants.dart';
@@ -26,7 +29,13 @@ class _AppState extends State<App> {
         title: 'Jestor',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: blue, fontFamily: 'Montserrat'),
-        home: const WelcomePage(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const WelcomePage(),
+          '/login': (context) => const LoginPage(),
+          '/register': (context) => const RegisterPage(),
+          '/home': (context) => const HomePage(),
+        },
       ),
     );
   }
