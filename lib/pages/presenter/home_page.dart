@@ -57,11 +57,30 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Row(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Jestor',
-                      style: TextStyle(height: 1.6, fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.search_outlined,
+                            color: Colors.white,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.person,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -119,9 +138,15 @@ class _HomePageState extends State<HomePage> {
                             color: blue,
                           ),
                         ),
-                        child: const Text(
-                          'Entradas',
-                          style: TextStyle(color: blue, fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.w600),
+                        child: Column(
+                          children: [
+                            SizedBox(width: 48, child: Image.asset('assets/images/icone_entrada.png')),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Entradas',
+                              style: TextStyle(color: blue, fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -140,9 +165,15 @@ class _HomePageState extends State<HomePage> {
                             color: blue,
                           ),
                         ),
-                        child: const Text(
-                          'Saídas',
-                          style: TextStyle(color: blue, fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.w600),
+                        child: Column(
+                          children: [
+                            SizedBox(width: 48, child: Image.asset('assets/images/icone_saida.png')),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Saídas',
+                              style: TextStyle(color: blue, fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
                       ),
                     ),
