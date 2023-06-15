@@ -1,6 +1,7 @@
+import 'package:flut_jestor_app/shared/components/chart_radial_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../models/chart_data_model.dart';
 import '../../shared/utils/constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,12 +33,7 @@ class _HomePageState extends State<HomePage> {
     ];
     const double fillPercent = 67;
     const double fillStop = (100 - fillPercent) / 100;
-    final List<double> stops = [
-      0.0,
-      fillStop,
-      fillStop,
-      1.0
-    ];
+    final List<double> stops = [0.0, fillStop, fillStop, 1.0];
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -185,9 +181,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue, fontFamily: 'Montserrat'),
                 ),
                 const Divider(color: blue),
-                SfCircularChart(series: <CircularSeries>[
-                  DoughnutSeries<ChartData, String>(dataSource: chartData, pointColorMapper: (ChartData data, _) => data.color, xValueMapper: (ChartData data, _) => data.x, yValueMapper: (ChartData data, _) => data.y)
-                ])
+                ChartRadialBarWidget(chartData: chartData)
               ],
             ),
           ),
@@ -195,11 +189,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-class ChartData {
-  ChartData(this.x, this.y, this.color);
-  final String x;
-  final double y;
-  final Color color;
 }
