@@ -45,7 +45,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Text(
                       'Jestor',
-                      style: TextStyle(height: 1.6, fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
+                      style:
+                          TextStyle(height: 1.6, fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
                     ),
                   ],
                 ),
