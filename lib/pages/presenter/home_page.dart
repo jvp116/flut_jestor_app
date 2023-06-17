@@ -2,7 +2,7 @@ import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/chart_data_model.dart';
-import '../../shared/utils/constants.dart';
+import '../../shared/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,16 +29,16 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 296,
-                  decoration: const BoxDecoration(
-                    color: blue,
-                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
-                  ),
-                  child: Padding(
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 308,
+              decoration: const BoxDecoration(
+                color: blue,
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(1), bottomLeft: Radius.circular(10)),
+              ),
+              child: Stack(
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                     child: Column(
                       children: [
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 36),
+                        const SizedBox(height: 24),
                         Row(
                           children: [
                             Expanded(
@@ -167,8 +167,8 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 36, 16, 16),
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(

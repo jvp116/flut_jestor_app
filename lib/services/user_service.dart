@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dson_adapter/dson_adapter.dart';
-import 'package:flut_jestor_app/shared/utils/constants.dart';
+import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
@@ -36,11 +36,7 @@ class UserService {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
-      Map<String, dynamic> data = {
-        'email': email,
-        'password': password,
-        'role': 'USER'
-      };
+      Map<String, dynamic> data = {'email': email, 'password': password, 'role': 'USER'};
 
       // UserModel user = dson.fromJson(data, UserModel.new);
 

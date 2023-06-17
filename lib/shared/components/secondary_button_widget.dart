@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/constants.dart';
+import '../utils/utils.dart';
 
 class SecondaryButtonWidget extends StatelessWidget {
   final String text;

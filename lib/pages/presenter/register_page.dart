@@ -1,5 +1,5 @@
 import 'package:flut_jestor_app/shared/components/custom_text_form_field_widget.dart';
-import 'package:flut_jestor_app/shared/utils/constants.dart';
+import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +45,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     Text(
                       'Jestor',
-                      style: TextStyle(height: 1.6, fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
+                      style:
+                          TextStyle(height: 1.6, fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
                     ),
                   ],
                 ),
@@ -170,7 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     }).onError((error, stackTrace) {
                                       controller.passwordController.clear();
                                       controller.confirmPasswordController.clear();
-                                      ScaffoldMessenger.of(context).showSnackBar(controller.snackBar);
+                                      ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Ops! Este e-mail já está cadastrado "));
                                     });
 
                                     if (!currentFocus.hasPrimaryFocus) {

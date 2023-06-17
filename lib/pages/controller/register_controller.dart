@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../services/user_service.dart';
-import '../../shared/utils/constants.dart';
 
 class RegisterController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -12,14 +11,6 @@ class RegisterController extends ChangeNotifier {
   bool isValidUser = false;
   bool showPassword = false;
   bool showConfirmPassword = false;
-
-  final snackBar = const SnackBar(
-    content: Text(
-      "Ops! Este e-mail já está cadastrado ",
-      textAlign: TextAlign.center,
-    ),
-    backgroundColor: red,
-  );
 
   Future<bool> register(UserService service, String email, String password) async {
     isValidUser = await service.register(email, password);

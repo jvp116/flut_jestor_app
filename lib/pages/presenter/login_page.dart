@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../shared/components/custom_text_form_field_widget.dart';
-import '../../../shared/utils/constants.dart';
 import '../../services/user_service.dart';
+import '../../shared/utils/utils.dart';
 import '../controller/login_controller.dart';
 
 class LoginPage extends StatefulWidget {
@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                                       }
                                     }).onError((error, stackTrace) {
                                       controller.passwordController.clear();
-                                      ScaffoldMessenger.of(context).showSnackBar(controller.snackBar);
+                                      ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("E-mail ou senha inválidos"));
                                     });
 
                                     if (!currentFocus.hasPrimaryFocus) {

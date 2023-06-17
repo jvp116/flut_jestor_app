@@ -4,7 +4,7 @@ import 'package:flut_jestor_app/pages/presenter/login_page.dart';
 import 'package:flut_jestor_app/pages/presenter/register_page.dart';
 import 'package:flut_jestor_app/pages/presenter/welcome_page.dart';
 import 'package:flut_jestor_app/services/user_service.dart';
-import 'package:flut_jestor_app/shared/utils/constants.dart';
+import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
