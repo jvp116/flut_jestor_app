@@ -30,14 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dio: ^4.0.6
-  brasil_fields: ^1.10.0
+  dio: ^5.2.1+1
+  brasil_fields: ^1.13.1
   provider: ^6.0.5
   dson_adapter: ^1.2.0+2
   shared_preferences: ^2.1.2
-  syncfusion_flutter_charts: ^21.2.9
-
-  cupertino_icons: ^1.0.2
+  syncfusion_flutter_charts: ^21.2.10
 
 dev_dependencies:
   flutter_test:
