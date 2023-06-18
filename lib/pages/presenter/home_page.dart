@@ -1,4 +1,5 @@
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
+import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/chart_data_model.dart';
@@ -12,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isPressed = true;
 
   final List<ChartData> chartData = [
@@ -24,52 +26,52 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: const DrawerWidget(),
+      appBar: AppBar(
+        title: const Text(
+          'Jestor',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
+        ),
+        backgroundColor: blue,
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.search_outlined,
+              color: Colors.white,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState?.openEndDrawer();
+            },
+            icon: const Icon(
+              Icons.person_outline,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+        ],
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 308,
+              height: 200,
               decoration: const BoxDecoration(
                 color: blue,
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(1), bottomLeft: Radius.circular(10)),
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15)),
               ),
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Jestor',
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.search_outlined,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.person,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
                         Row(
                           children: [
                             Text(
@@ -77,19 +79,13 @@ class _HomePageState extends State<HomePage> {
                               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                             SizedBox(
-                              width: _isPressed ? 0 : 126,
+                              width: _isPressed ? 0 : 132,
                               height: _isPressed ? 0 : 24,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: Colors.white,
-                                    gradient: LinearGradient(begin: FractionalOffset.topLeft, end: FractionalOffset.bottomRight, colors: [
-                                      const Color.fromARGB(100, 255, 255, 255),
-                                      Colors.white.withOpacity(0.08),
-                                    ], stops: const [
-                                      0.0,
-                                      1.0
-                                    ])),
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: const Color.fromARGB(84, 255, 255, 255),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -114,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
-                                  minimumSize: const Size.fromHeight(120),
+                                  minimumSize: const Size.fromHeight(96),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -141,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
-                                  minimumSize: const Size.fromHeight(120),
+                                  minimumSize: const Size.fromHeight(96),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
