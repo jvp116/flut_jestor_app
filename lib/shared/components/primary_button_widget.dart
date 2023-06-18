@@ -19,7 +19,7 @@ class PrimaryButtonWidget extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        backgroundColor: green,
+        backgroundColor: greenLight,
         textStyle: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,

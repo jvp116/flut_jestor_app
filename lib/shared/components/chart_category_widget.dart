@@ -13,15 +13,27 @@ class ChartCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCircularChart(series: <CircularSeries>[
-      DoughnutSeries<ChartData, String>(
-        dataSource: chartData,
-        pointColorMapper: (ChartData data, _) => data.color,
-        xValueMapper: (ChartData data, _) => data.x,
-        yValueMapper: (ChartData data, _) => data.y,
-        radius: '90%',
-        innerRadius: '50%',
-      ),
-    ]);
+    return SfCircularChart(
+        tooltipBehavior: TooltipBehavior(
+          enable: true,
+          tooltipPosition: TooltipPosition.pointer,
+        ),
+        series: <CircularSeries>[
+          DoughnutSeries<ChartData, String>(
+            dataSource: chartData,
+            dataLabelSettings: const DataLabelSettings(
+              isVisible: true,
+              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
+              labelPosition: ChartDataLabelPosition.outside,
+              connectorLineSettings: ConnectorLineSettings(type: ConnectorType.curve),
+            ),
+            enableTooltip: true,
+            pointColorMapper: (ChartData data, _) => data.color,
+            xValueMapper: (ChartData data, _) => data.category,
+            yValueMapper: (ChartData data, _) => data.value,
+            radius: '80%',
+            innerRadius: '50%',
+          ),
+        ]);
   }
 }

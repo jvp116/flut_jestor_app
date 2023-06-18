@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 class ChartData {
-  ChartData(this.x, this.y, this.color);
-  final String x;
-  final double y;
+  ChartData(this.category, this.value, this.color);
+  final String category;
+  final double value;
   final Color color;
 }

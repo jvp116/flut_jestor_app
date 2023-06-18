@@ -41,7 +41,7 @@ class DrawerWidget extends StatelessWidget {
                 height: 1,
                 indent: 8,
                 endIndent: 8,
-                color: blueLight,
+                color: blueAccent,
               ),
               ListTile(
                 leading: const Icon(

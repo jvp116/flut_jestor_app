@@ -97,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   suffixIcon: GestureDetector(
                                       child: Icon(
                                         controller.showPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                        color: blueLight,
+                                        color: blueAccent,
                                       ),
                                       onTap: () => setState(() {
                                             controller.showPassword = !controller.showPassword;
@@ -134,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   suffixIcon: GestureDetector(
                                       child: Icon(
                                         controller.showConfirmPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                        color: blueLight,
+                                        color: blueAccent,
                                       ),
                                       onTap: () => setState(() {
                                             controller.showConfirmPassword = !controller.showConfirmPassword;
@@ -184,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  backgroundColor: green,
+                                  backgroundColor: greenLight,
                                   textStyle: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,

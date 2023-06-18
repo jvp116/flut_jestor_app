@@ -17,10 +17,15 @@ class _HomePageState extends State<HomePage> {
   bool _isPressed = true;
 
   final List<ChartData> chartData = [
-    ChartData('David', 25, const Color.fromRGBO(9, 0, 136, 1)),
-    ChartData('Steve', 38, const Color.fromRGBO(147, 0, 119, 1)),
-    ChartData('Jack', 34, const Color.fromRGBO(228, 0, 124, 1)),
-    ChartData('Others', 52, const Color.fromRGBO(255, 189, 57, 1))
+    ChartData('Alimentação', 2510, red),
+    ChartData('Compras', 3114, purple),
+    ChartData('Educação', 9000, purpleLight),
+    ChartData('Lazer', 9000, yellow),
+    ChartData('Moradia', 9000, yellowAccent),
+    ChartData('Pet', 5002.56, brown),
+    ChartData('Saúde', 3098, green),
+    ChartData('Transporte', 1400, blueLight),
+    ChartData('Outras Saídas', 9000, blue),
   ];
 
   @override
@@ -177,7 +182,6 @@ class _HomePageState extends State<HomePage> {
                   const Divider(
                     color: blue,
                   ),
-                  const SizedBox(height: 32),
                   ChartCategoryWidget(chartData: chartData),
                 ],
               ),
@@ -199,7 +203,7 @@ class _HomePageState extends State<HomePage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              backgroundColor: green,
+              backgroundColor: greenLight,
               textStyle: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
