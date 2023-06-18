@@ -54,6 +54,26 @@ class UserService {
     }
   }
 
+  Future<bool> logout(String? accessToken) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    try {
+      dio.options.headers["authorization"] = "Bearer $accessToken";
+
+      await sharedPreferences.clear();
+
+      final response = await dio.post('$basePath/api/v1/auth/logout');
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      throw Exception('Ocorreu um erro durante o logout: $error');
+    }
+  }
+
   // Future<bool> editUser(int id, String email, String password) async {
   //   try {
   //     Map<String, dynamic> data = {

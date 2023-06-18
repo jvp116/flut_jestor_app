@@ -1,11 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flut_jestor_app/pages/controller/home_controller.dart';
+import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({super.key});
+  final HomeController controller;
+
+  const DrawerWidget({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final UserService service = Provider.of<UserService>(context);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -74,7 +86,15 @@ class DrawerWidget extends StatelessWidget {
                   'Sair',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
                 ),
-                onTap: () {},
+                onTap: () async {
+                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+                  controller.logout(service, sharedPreferences.getString('access_token')).then((value) {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }).onError((error, stackTrace) {
+                    ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("E-mail ou senha inválidos"));
+                  });
+                },
               ),
             ],
           ),

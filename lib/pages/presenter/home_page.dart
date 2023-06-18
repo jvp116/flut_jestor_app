@@ -1,3 +1,4 @@
+import 'package:flut_jestor_app/pages/controller/home_controller.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final HomeController controller = HomeController();
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isPressed = true;
 
@@ -32,7 +35,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      endDrawer: const DrawerWidget(),
+      endDrawer: DrawerWidget(
+        controller: controller,
+      ),
       appBar: AppBar(
         title: const Text(
           'Jestor',
