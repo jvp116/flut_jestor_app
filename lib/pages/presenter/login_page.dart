@@ -1,3 +1,4 @@
+import 'package:flut_jestor_app/pages/presenter/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -126,7 +127,13 @@ class _LoginPageState extends State<LoginPage> {
                                   if (controller.formKey.currentState!.validate()) {
                                     controller.login(service, controller.emailController.text, controller.passwordController.text).then((value) {
                                       if (controller.isValidUser) {
-                                        Navigator.pushReplacementNamed(context, '/home');
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) => HomePage(
+                                              email: controller.emailController.text,
+                                            ),
+                                          ),
+                                        );
                                       }
                                     }).onError((error, stackTrace) {
                                       controller.passwordController.clear();

@@ -23,6 +23,7 @@ class UserService {
       if (response.statusCode == 200) {
         await sharedPreferences.setString('access_token', (response.data)['access_token']);
         await sharedPreferences.setString('refresh_token', (response.data)['refresh_token']);
+        await sharedPreferences.setString('email', email);
         return true;
       } else {
         return false;
@@ -37,8 +38,6 @@ class UserService {
 
     try {
       Map<String, dynamic> data = {'email': email, 'password': password, 'role': 'USER'};
-
-      // UserModel user = dson.fromJson(data, UserModel.new);
 
       final response = await dio.post('$basePath/api/v1/auth/register', data: data);
 
@@ -93,19 +92,26 @@ class UserService {
   //   }
   // }
 
-  // Future<bool> deleteUser(int id) async {
-  //   try {
-  //     final response = await dio.delete('$basePath/user/$id');
+  Future<bool> delete(String email) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-  //     if (response.statusCode == 204) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     throw Exception('Ocorreu um erro durante a delecao de usuario: $error');
-  //   }
-  // }
+    try {
+      dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
+      Map<String, dynamic> data = {'email': email};
+
+      await sharedPreferences.clear();
+
+      final response = await dio.delete('$basePath/api/v1/user', data: data);
+
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw Exception('Ocorreu um erro durante a delecao de usuario: $error');
+    }
+  }
 
   Future<bool> refresh(String? refreshToken) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

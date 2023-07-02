@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-const String basePath = "http://10.0.2.2:8080";
+const String basePath = "http://localhost:8080";
+// 10.0.2.2
 
 // Colors
 const Color blueAccent = Color.fromRGBO(23, 93, 145, 0.5);
@@ -29,6 +30,17 @@ class Utils {
         textAlign: TextAlign.center,
       ),
       backgroundColor: red,
+      behavior: SnackBarBehavior.floating,
+    );
+  }
+
+  SnackBar snackBarSuccess(String text) {
+    return SnackBar(
+      content: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: green,
       behavior: SnackBarBehavior.floating,
     );
   }

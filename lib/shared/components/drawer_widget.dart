@@ -6,13 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   final HomeController controller;
+  final String email;
 
   const DrawerWidget({
     Key? key,
     required this.controller,
+    required this.email,
   }) : super(key: key);
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +50,15 @@ class DrawerWidget extends StatelessWidget {
           ),
           Column(
             children: [
-              const ListTile(
-                leading: Icon(
+              ListTile(
+                leading: const Icon(
                   Icons.person_outline,
                   color: blue,
                   size: 24,
                 ),
                 title: Text(
-                  'usuario@email.com',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+                  widget.email,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
                 ),
               ),
               const Divider(
@@ -64,7 +76,135 @@ class DrawerWidget extends StatelessWidget {
                   'Alterar senha',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
                 ),
-                onTap: () {},
+                onTap: () {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                      title: const Text(
+                        'Alterar Senha',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: blue),
+                      ),
+                      content: SizedBox(
+                        width: 280,
+                        height: 180,
+                        child: Form(
+                          key: widget.controller.formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 24),
+                              TextFormField(
+                                controller: widget.controller.newPasswordController,
+                                obscureText: widget.controller.showPassword == false ? true : false,
+                                enableInteractiveSelection: false,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.all(0),
+                                  border: const UnderlineInputBorder(),
+                                  labelText: 'Nova senha',
+                                  labelStyle: const TextStyle(
+                                    color: Color.fromARGB(128, 0, 0, 0),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  suffixIcon: GestureDetector(
+                                      child: Icon(
+                                        widget.controller.showPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                        color: blueAccent,
+                                      ),
+                                      onTap: () => setState(() {
+                                            widget.controller.showPassword = !widget.controller.showPassword;
+                                          })),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Por favor, digite uma senha';
+                                  }
+
+                                  if (value.length < 8) {
+                                    return "A senha deve ter no mínimo 8 caracteres";
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 36),
+                              TextFormField(
+                                controller: widget.controller.confirmNewPasswordController,
+                                obscureText: widget.controller.showConfirmPassword == false ? true : false,
+                                enableInteractiveSelection: false,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.all(0),
+                                  border: const UnderlineInputBorder(),
+                                  labelText: 'Confirmação de senha',
+                                  labelStyle: const TextStyle(
+                                    color: Color.fromARGB(128, 0, 0, 0),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  suffixIcon: GestureDetector(
+                                      child: Icon(
+                                        widget.controller.showConfirmPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                        color: blueAccent,
+                                      ),
+                                      onTap: () => setState(() {
+                                            widget.controller.showConfirmPassword = !widget.controller.showConfirmPassword;
+                                          })),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Por favor, confirme a senha';
+                                  }
+
+                                  if (value.length < 8) {
+                                    return "A senha deve ter no mínimo 8 caracteres";
+                                  }
+
+                                  if (value != widget.controller.newPasswordController.text) {
+                                    return "Ops! As senhas digitadas não correspondem";
+                                  }
+
+                                  return null;
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            widget.controller.newPasswordController.clear();
+                            widget.controller.confirmNewPasswordController.clear();
+                            Navigator.pop(context, 'Cancelar');
+                          },
+                          child: const Text(
+                            'Cancelar',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: red),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                            widget.controller.delete(service, sharedPreferences.getString('email') ?? '').then((value) {
+                              Navigator.pushReplacementNamed(context, '/login');
+                            }).onError((error, stackTrace) {
+                              ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Ops, ocorreu um erro inesperado"));
+                            });
+                          },
+                          child: const Text(
+                            'Salvar',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: greenLight),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(
@@ -72,10 +212,49 @@ class DrawerWidget extends StatelessWidget {
                   color: blue,
                 ),
                 title: const Text(
-                  'Excluir conta',
+                  'Excluir usuário',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                      title: const Text(
+                        'Excluir usuário',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: blue),
+                      ),
+                      content: const Text(
+                        'Você tem certeza de que deseja excluir seu usuário?',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Montserrat', color: blue),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Não'),
+                          child: const Text(
+                            'Não',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: red),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                            widget.controller.delete(service, sharedPreferences.getString('email') ?? '').then((value) {
+                              Navigator.pushReplacementNamed(context, '/login');
+                            }).onError((error, stackTrace) {
+                              ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Ops, ocorreu um erro inesperado"));
+                            });
+                          },
+                          child: const Text(
+                            'Sim',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: greenLight),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(
@@ -89,10 +268,10 @@ class DrawerWidget extends StatelessWidget {
                 onTap: () async {
                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-                  controller.logout(service, sharedPreferences.getString('access_token')).then((value) {
+                  widget.controller.logout(service, sharedPreferences.getString('access_token')).then((value) {
                     Navigator.pushReplacementNamed(context, '/login');
                   }).onError((error, stackTrace) {
-                    ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("E-mail ou senha inválidos"));
+                    ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Ops, ocorreu algum erro inesperado"));
                   });
                 },
               ),

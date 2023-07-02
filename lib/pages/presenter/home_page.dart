@@ -7,7 +7,9 @@ import '../../models/chart_data_model.dart';
 import '../../shared/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String email;
+
+  const HomePage({super.key, required this.email});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,11 +34,17 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: DrawerWidget(
         controller: controller,
+        email: widget.email,
       ),
       appBar: AppBar(
         title: const Text(

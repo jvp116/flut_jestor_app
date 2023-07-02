@@ -34,7 +34,9 @@ class _AppState extends State<App> {
           '/': (context) => const WelcomePage(),
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
-          '/home': (context) => const HomePage(),
+          '/home': (context) => const HomePage(
+                email: '',
+              ),
         },
       ),
     );
