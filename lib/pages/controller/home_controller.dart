@@ -18,4 +18,8 @@ class HomeController {
   Future<bool> delete(UserService service, String email) async {
     return await service.delete(email);
   }
+
+  Future<bool> updatePassword(UserService service, String email, String newPassword) async {
+    return await service.updatePassword(email, newPassword);
+  }
 }

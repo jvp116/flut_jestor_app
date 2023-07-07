@@ -77,132 +77,146 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
                 ),
                 onTap: () {
-                  showDialog<String>(
+                  Navigator.of(context).pop();
+                  showDialog(
+                    barrierDismissible: false,
                     context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                      title: const Text(
-                        'Alterar Senha',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: blue),
-                      ),
-                      content: SizedBox(
-                        width: 280,
-                        height: 180,
-                        child: Form(
-                          key: widget.controller.formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 24),
-                              TextFormField(
-                                controller: widget.controller.newPasswordController,
-                                obscureText: widget.controller.showPassword == false ? true : false,
-                                enableInteractiveSelection: false,
-                                enableSuggestions: false,
-                                autocorrect: false,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.all(0),
-                                  border: const UnderlineInputBorder(),
-                                  labelText: 'Nova senha',
-                                  labelStyle: const TextStyle(
-                                    color: Color.fromARGB(128, 0, 0, 0),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                    builder: (context) => StatefulBuilder(builder: (context, setState) {
+                      return AlertDialog(
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                        title: const Text(
+                          'Alterar Senha',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: blue),
+                        ),
+                        content: SizedBox(
+                          width: 280,
+                          height: 180,
+                          child: Form(
+                            key: widget.controller.formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 24),
+                                TextFormField(
+                                  controller: widget.controller.newPasswordController,
+                                  obscureText: widget.controller.showPassword == false ? true : false,
+                                  enableInteractiveSelection: false,
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.all(0),
+                                    border: const UnderlineInputBorder(),
+                                    labelText: 'Nova senha',
+                                    labelStyle: const TextStyle(
+                                      color: Color.fromARGB(128, 0, 0, 0),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    suffixIcon: GestureDetector(
+                                        child: Icon(
+                                          widget.controller.showPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                          color: blueAccent,
+                                        ),
+                                        onTap: () => setState(() {
+                                              widget.controller.showPassword = !widget.controller.showPassword;
+                                            })),
                                   ),
-                                  suffixIcon: GestureDetector(
-                                      child: Icon(
-                                        widget.controller.showPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                        color: blueAccent,
-                                      ),
-                                      onTap: () => setState(() {
-                                            widget.controller.showPassword = !widget.controller.showPassword;
-                                          })),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Por favor, digite uma senha';
+                                    }
+
+                                    if (value.length < 8) {
+                                      return "A senha deve ter no mínimo 8 caracteres";
+                                    }
+
+                                    return null;
+                                  },
                                 ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Por favor, digite uma senha';
-                                  }
-
-                                  if (value.length < 8) {
-                                    return "A senha deve ter no mínimo 8 caracteres";
-                                  }
-
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 36),
-                              TextFormField(
-                                controller: widget.controller.confirmNewPasswordController,
-                                obscureText: widget.controller.showConfirmPassword == false ? true : false,
-                                enableInteractiveSelection: false,
-                                enableSuggestions: false,
-                                autocorrect: false,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.all(0),
-                                  border: const UnderlineInputBorder(),
-                                  labelText: 'Confirmação de senha',
-                                  labelStyle: const TextStyle(
-                                    color: Color.fromARGB(128, 0, 0, 0),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                const SizedBox(height: 36),
+                                TextFormField(
+                                  controller: widget.controller.confirmNewPasswordController,
+                                  obscureText: widget.controller.showConfirmPassword == false ? true : false,
+                                  enableInteractiveSelection: false,
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.all(0),
+                                    border: const UnderlineInputBorder(),
+                                    labelText: 'Confirmação de senha',
+                                    labelStyle: const TextStyle(
+                                      color: Color.fromARGB(128, 0, 0, 0),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    suffixIcon: GestureDetector(
+                                        child: Icon(
+                                          widget.controller.showConfirmPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                          color: blueAccent,
+                                        ),
+                                        onTap: () => setState(() {
+                                              widget.controller.showConfirmPassword = !widget.controller.showConfirmPassword;
+                                            })),
                                   ),
-                                  suffixIcon: GestureDetector(
-                                      child: Icon(
-                                        widget.controller.showConfirmPassword == false ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                        color: blueAccent,
-                                      ),
-                                      onTap: () => setState(() {
-                                            widget.controller.showConfirmPassword = !widget.controller.showConfirmPassword;
-                                          })),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Por favor, confirme a senha';
-                                  }
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Por favor, confirme a senha';
+                                    }
 
-                                  if (value.length < 8) {
-                                    return "A senha deve ter no mínimo 8 caracteres";
-                                  }
+                                    if (value.length < 8) {
+                                      return "A senha deve ter no mínimo 8 caracteres";
+                                    }
 
-                                  if (value != widget.controller.newPasswordController.text) {
-                                    return "Ops! As senhas digitadas não correspondem";
-                                  }
+                                    if (value != widget.controller.newPasswordController.text) {
+                                      return "Ops! As senhas digitadas não correspondem";
+                                    }
 
-                                  return null;
-                                },
-                              )
-                            ],
+                                    return null;
+                                  },
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            widget.controller.newPasswordController.clear();
-                            widget.controller.confirmNewPasswordController.clear();
-                            Navigator.pop(context, 'Cancelar');
-                          },
-                          child: const Text(
-                            'Cancelar',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: red),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              widget.controller.newPasswordController.clear();
+                              widget.controller.confirmNewPasswordController.clear();
+                              Navigator.pop(context, 'Cancelar');
+                            },
+                            child: const Text(
+                              'Cancelar',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: red),
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                            widget.controller.delete(service, sharedPreferences.getString('email') ?? '').then((value) {
-                              Navigator.pushReplacementNamed(context, '/login');
-                            }).onError((error, stackTrace) {
-                              ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Ops, ocorreu um erro inesperado"));
-                            });
-                          },
-                          child: const Text(
-                            'Salvar',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: greenLight),
+                          TextButton(
+                            onPressed: () async {
+                              if (widget.controller.formKey.currentState!.validate()) {
+                                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                widget.controller
+                                    .updatePassword(service, sharedPreferences.getString('email') ?? '', widget.controller.newPasswordController.text)
+                                    .then((value) {
+                                  if (value == true) {
+                                    ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarSuccess("A senha foi atualizada com sucesso!"));
+                                  }
+                                  Navigator.of(context).pop();
+                                }).onError((error, stackTrace) {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Algo deu errado! Tente novamente."));
+                                });
+                                widget.controller.newPasswordController.clear();
+                                widget.controller.confirmNewPasswordController.clear();
+                              }
+                            },
+                            child: const Text(
+                              'Salvar',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: greenLight),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    }),
                   );
                 },
               ),

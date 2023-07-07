@@ -73,24 +73,28 @@ class UserService {
     }
   }
 
-  // Future<bool> editUser(int id, String email, String password) async {
-  //   try {
-  //     Map<String, dynamic> data = {
-  //       'email': email,
-  //       'password': password,
-  //     };
+  Future<bool> updatePassword(String email, String newPassword) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Response response = Response(requestOptions: RequestOptions());
+    try {
+      dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
+      Map<String, dynamic> data = {
+        'email': email,
+        'password': newPassword,
+      };
 
-  //     final response = await dio.put('$basePath/user/$id', data: data);
+      response = await dio.put('$basePath/api/v1/user/password', data: data);
 
-  //     if (response.statusCode == 200) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     throw Exception('Ocorreu um erro durante a edicao de usuario: $error');
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      if (response.statusCode == 403) {}
+      throw Exception('Ocorreu um erro durante a atualizacao da senha: $error');
+    }
+  }
 
   Future<bool> delete(String email) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
