@@ -91,7 +91,9 @@ class UserService {
         return false;
       }
     } catch (error) {
-      if (response.statusCode == 403) {}
+      if (response.statusCode == 403) {
+        // TODO forbidden logar novamente no app para autenticar
+      }
       throw Exception('Ocorreu um erro durante a atualizacao da senha: $error');
     }
   }
