@@ -1,0 +1,83 @@
+import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
+import 'package:flut_jestor_app/pages/presenter/list_financial_record_page.dart';
+import 'package:flut_jestor_app/shared/components/loading_widget.dart';
+import 'package:flut_jestor_app/shared/components/start_default_widget.dart';
+import 'package:flut_jestor_app/shared/utils/utils.dart';
+import 'package:flut_jestor_app/states/financial_record_state.dart';
+import 'package:flut_jestor_app/stores/financial_record_store.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class FinancialRecordPage extends StatefulWidget {
+  final String title;
+
+  const FinancialRecordPage({super.key, required this.title});
+
+  @override
+  State<FinancialRecordPage> createState() => _FinancialRecordPageState();
+}
+
+class _FinancialRecordPageState extends State<FinancialRecordPage> {
+  final FinancialRecordController controller = FinancialRecordController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FinancialRecordStore>().fetchCustomers();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            widget.title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+          ),
+        ),
+        backgroundColor: blue,
+        elevation: 0,
+        actions: [
+          Center(
+            child: Text(
+              controller.getActualMonth(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: configPage(),
+    );
+  }
+
+  Widget configPage() {
+    if (controller.state is LoadingFinancialRecordState) {
+      return const LoadingWidget();
+    }
+
+    if (controller.state is ErrorFinancialRecordState) {
+      return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
+    }
+
+    if (controller.state is SuccessFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
+      return ListFinancialRecordPage(controller: controller);
+    }
+
+    return const StartDefaultWidget(
+        iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui nenhum lançamento cadastrado esse mês.');
+  }
+}

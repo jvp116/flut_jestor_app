@@ -18,6 +18,16 @@ class FinancialRecordModel {
     required this.category,
   });
 
+  static FinancialRecordModel fromMap(Map<String, dynamic> map) {
+    return FinancialRecordModel(
+        id: map['id'] ?? 0,
+        value: map['value'] ?? '',
+        date: map['date'] ?? '',
+        description: map['description'] ?? '',
+        user: UserModel.fromMap(map['user'] ?? ''),
+        category: CategoryModel.fromMap(map['category'] ?? ''));
+  }
+
   Map<String, dynamic> toMap(FinancialRecordModel financialRecord) {
     return <String, dynamic>{
       'id': financialRecord.id,

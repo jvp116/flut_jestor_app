@@ -1,4 +1,5 @@
 import 'package:flut_jestor_app/pages/controller/home_controller.dart';
+import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,12 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const FinancialRecordPage(title: 'Entradas')),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   minimumSize: const Size.fromHeight(96),
@@ -152,7 +158,12 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(width: 16),
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const FinancialRecordPage(title: 'Saídas')),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   minimumSize: const Size.fromHeight(96),

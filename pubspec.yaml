@@ -36,7 +36,8 @@ dependencies:
   dson_adapter: ^1.2.0+2
   shared_preferences: ^2.1.2
   syncfusion_flutter_charts: ^21.2.10
-
+  intl: ^0.18.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
