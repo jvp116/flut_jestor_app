@@ -6,12 +6,14 @@ import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class FinancialRecordPage extends StatefulWidget {
   final String title;
+  final String type;
 
-  const FinancialRecordPage({super.key, required this.title});
+  const FinancialRecordPage({super.key, required this.title, required this.type});
 
   @override
   State<FinancialRecordPage> createState() => _FinancialRecordPageState();
@@ -24,43 +26,50 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FinancialRecordStore>().fetchCustomers();
+      context.read<FinancialRecordStore>().fetchRecords(widget.type, DateFormat.M().format(DateTime.now()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
-          ),
-        ),
-        backgroundColor: blue,
-        elevation: 0,
-        actions: [
-          Center(
-            child: Text(
-              controller.getActualMonth(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+    controller.initialize(context.watch<FinancialRecordStore>());
+
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Center(
+              child: Text(
+                widget.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+              ),
             ),
+            backgroundColor: blue,
+            elevation: 0,
+            actions: [
+              Center(
+                child: Text(
+                  controller.getActualMonth(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.white,
-      body: configPage(),
+          backgroundColor: Colors.white,
+          body: configPage(),
+        );
+      },
     );
   }
 

@@ -1,16 +1,31 @@
 import 'package:dio/dio.dart';
 import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FinancialRecordService {
   final Dio dio;
 
   FinancialRecordService(this.dio);
 
-  Future<List<FinancialRecordModel>> fetchRecords() async {
-    final response = await dio.get('$basePath/api/v1/financial-record');
-    final list = response.data as List;
-    return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
+  Future<List<FinancialRecordModel>> fetchRecords(String type, String month) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Response response = Response(requestOptions: RequestOptions());
+
+    try {
+      dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
+      String? email = sharedPreferences.getString('email');
+      Map<String, dynamic> data = {"email": email, "type": type, "month": month};
+
+      final response = await dio.get('$basePath/api/v1/financial-record', data: data);
+      final list = response.data as List;
+      return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
+    } catch (error) {
+      if (response.statusCode == 403) {
+        // TODO forbidden logar novamente no app para autenticar
+      }
+      throw Exception('Ocorreu um erro durante a listagem de lançamentos: $error');
+    }
   }
 
   // Future<FinancialRecordModel> createCustomer(String cpf, String name, String lastname) async {

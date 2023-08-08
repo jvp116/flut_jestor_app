@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
 import 'package:flut_jestor_app/pages/presenter/home_page.dart';
 import 'package:flut_jestor_app/pages/presenter/login_page.dart';
 import 'package:flut_jestor_app/pages/presenter/register_page.dart';
@@ -38,7 +37,6 @@ class _AppState extends State<App> {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const HomePage(email: ''),
-          '/financial-record': (context) => const FinancialRecordPage(title: ''),
         },
       ),
     );

@@ -7,23 +7,23 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
 
   FinancialRecordStore(this.service) : super(InitialFinancialRecordState());
 
-  Future fetchCustomers() async {
+  Future fetchRecords(String type, String month) async {
     value = LoadingFinancialRecordState();
     try {
-      final financialRecords = await service.fetchCustomers();
+      final financialRecords = await service.fetchRecords(type, month);
       value = SuccessFinancialRecordState(financialRecords);
     } catch (e) {
       value = ErrorFinancialRecordState(e.toString());
     }
   }
 
-  Future createCustomer(String cpf, String name, String lastname) async {
-    try {
-      return await service.createCustomer(cpf, name, lastname);
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // Future createCustomer(String cpf, String name, String lastname) async {
+  //   try {
+  //     return await service.createCustomer(cpf, name, lastname);
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   // Future<FinancialRecordModel> editCustomer(int id, String name, String lastname) async {
   //   try {

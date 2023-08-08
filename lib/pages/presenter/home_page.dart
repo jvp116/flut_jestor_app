@@ -129,7 +129,11 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const FinancialRecordPage(title: 'Entradas')),
+                                    MaterialPageRoute(
+                                        builder: (context) => const FinancialRecordPage(
+                                              title: 'Entradas',
+                                              type: 'E',
+                                            )),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -161,7 +165,12 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const FinancialRecordPage(title: 'Saídas')),
+                                    MaterialPageRoute(
+                                      builder: (context) => const FinancialRecordPage(
+                                        title: 'Saídas',
+                                        type: 'S',
+                                      ),
+                                    ),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
