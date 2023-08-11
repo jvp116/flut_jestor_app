@@ -6,7 +6,7 @@ class FinancialRecordModel {
   double value;
   String date;
   String description;
-  UserModel user;
+  UserModel? user;
   CategoryModel category;
 
   FinancialRecordModel({
@@ -14,7 +14,7 @@ class FinancialRecordModel {
     required this.value,
     required this.date,
     required this.description,
-    required this.user,
+    this.user,
     required this.category,
   });
 
@@ -24,7 +24,6 @@ class FinancialRecordModel {
         value: map['value'] ?? '',
         date: map['date'] ?? '',
         description: map['description'] ?? '',
-        user: UserModel.fromMap(map['user'] ?? ''),
         category: CategoryModel.fromMap(map['category'] ?? ''));
   }
 

@@ -33,15 +33,13 @@ class StartDefaultWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Center(
-            child: Expanded(
-              child: Text(
-                subtitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16),
-                softWrap: false,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+              softWrap: false,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

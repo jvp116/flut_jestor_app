@@ -9,11 +9,11 @@ class UserModel {
     return UserModel(id: map['id'] ?? 0, email: map['email'] ?? '', password: map['password'] ?? '');
   }
 
-  static Map<String, dynamic> toMap(UserModel user) {
+  static Map<String, dynamic> toMap(UserModel? user) {
     return {
-      'id': user.id,
-      'email': user.email,
-      'password': user.password,
+      'id': user?.id,
+      'email': user?.email,
+      'password': user?.password,
     };
   }
 }
