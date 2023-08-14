@@ -8,6 +8,7 @@ import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatefulWidget {
@@ -28,6 +29,8 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (context) => FinancialRecordStore(context.read())),
       ],
       child: MaterialApp(
+        localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
+        supportedLocales: const [Locale('pt', 'BR')],
         title: 'Jestor',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: blue, fontFamily: 'Montserrat'),

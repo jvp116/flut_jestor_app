@@ -51,7 +51,7 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
             actions: [
               Center(
                 child: Text(
-                  controller.getActualMonth(),
+                  DateFormat("MMM", "pt_BR").format(DateTime.now()),
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
                 ),

@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -88,9 +89,20 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                 final financialRecord = widget.controller.state.financialRecords[index];
 
                 return ListTile(
-                    leading: Text('${financialRecord.id}', style: const TextStyle(fontSize: 14)),
-                    title: Text(financialRecord.description),
-                    subtitle: Text(financialRecord.value.toString()),
+                    contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                    leading: SizedBox(
+                      width: 36,
+                      child: Image.asset(
+                        'assets/images/${financialRecord.category.icon}.png',
+                      ),
+                    ),
+                    title: Text(financialRecord.description, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: blue)),
+                    subtitle: Text(
+                      UtilBrasilFields.obterReal(financialRecord.value),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: blue),
+                    ),
+                    trailing: Text(widget.controller.getDate(DateTime.parse(financialRecord.date)),
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: blue)),
                     onTap: () {
                       showModalBottomSheet(
                         constraints: BoxConstraints.tight(Size(MediaQuery.of(context).size.width, 160)),
