@@ -92,7 +92,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           width: 280,
                           height: 180,
                           child: Form(
-                            key: widget.controller.formKey,
+                            key: widget.controller.formKeyPassword,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -192,7 +192,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           ),
                           TextButton(
                             onPressed: () async {
-                              if (widget.controller.formKey.currentState!.validate()) {
+                              if (widget.controller.formKeyPassword.currentState!.validate()) {
                                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                                 widget.controller
                                     .updatePassword(service, sharedPreferences.getString('email') ?? '', widget.controller.newPasswordController.text)

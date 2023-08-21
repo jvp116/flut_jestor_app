@@ -1,8 +1,11 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/pages/controller/home_controller.dart';
 import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
+import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/chart_data_model.dart';
 import '../../shared/utils/utils.dart';
@@ -19,9 +22,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final HomeController controller = HomeController();
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _isPressed = true;
-
   final List<ChartData> chartData = [
     ChartData('Alimentação', 2510, red),
     ChartData('Compras', 3114, purple),
@@ -35,36 +35,23 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      endDrawer: DrawerWidget(
-        controller: controller,
-        email: widget.email,
-      ),
+      key: controller.scaffoldKey,
+      endDrawer: DrawerWidget(controller: controller, email: widget.email),
       appBar: AppBar(
-        title: const Text(
-          'Jestor',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates'),
-        ),
+        title: const Text('Jestor',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates')),
         backgroundColor: blue,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(
-              Icons.search_outlined,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.search_outlined, color: Colors.white),
           ),
           IconButton(
             onPressed: () {
-              _scaffoldKey.currentState?.openEndDrawer();
+              controller.scaffoldKey.currentState?.openEndDrawer();
             },
             icon: const Icon(
               Icons.person_outline,
@@ -82,9 +69,7 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width,
               height: 200,
               decoration: const BoxDecoration(
-                color: blue,
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15)),
-              ),
+                  color: blue, borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15))),
               child: Stack(
                 children: [
                   Padding(
@@ -94,28 +79,25 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           children: [
                             Text(
-                              _isPressed ? 'R\$ 1809,12' : '',
+                              controller.isPressed ? 'R\$ 1809,12' : '',
                               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                             SizedBox(
-                              width: _isPressed ? 0 : 132,
-                              height: _isPressed ? 0 : 24,
+                              width: controller.isPressed ? 0 : 132,
+                              height: controller.isPressed ? 0 : 24,
                               child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: const Color.fromARGB(84, 255, 255, 255),
-                                ),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: const Color.fromARGB(84, 255, 255, 255)),
                               ),
                             ),
                             const SizedBox(width: 8),
                             IconButton(
                               iconSize: 28.0,
-                              icon: Icon(_isPressed ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                              icon: Icon(controller.isPressed ? Icons.visibility_outlined : Icons.visibility_off_outlined),
                               color: const Color.fromARGB(128, 255, 255, 255),
-                              tooltip: _isPressed ? 'Esconder saldo' : 'Mostrar saldo',
+                              tooltip: controller.isPressed ? 'Esconder saldo' : 'Mostrar saldo',
                               onPressed: () {
                                 setState(() {
-                                  _isPressed = !_isPressed;
+                                  controller.isPressed = !controller.isPressed;
                                 });
                               },
                             ),
@@ -230,7 +212,84 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(10.0),
+                  ),
+                ),
+                constraints: BoxConstraints.tight(
+                  Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+                ),
+                builder: (BuildContext context) {
+                  return Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: const BoxDecoration(
+                          color: Color.fromRGBO(23, 93, 145, 0.15),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text("Novo lançamento", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: blue)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Form(
+                          key: controller.formKeyNewFinancialRecord,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("categoria",
+                                  style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                              const DropDownCategoryButtonWidget(),
+                              const SizedBox(height: 16),
+                              const Text("valor", style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                              SizedBox(
+                                height: 36,
+                                child: TextFormField(
+                                  controller: controller.valueController,
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, RealInputFormatter(moeda: true)],
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Por favor, digite um valor';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(56),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          backgroundColor: greenLight,
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        child: const Text('Pronto', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(56),
               shape: RoundedRectangleBorder(

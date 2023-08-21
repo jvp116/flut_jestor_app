@@ -1,11 +1,17 @@
 import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class HomeController {
-  final formKey = GlobalKey<FormState>();
+  final formKeyNewFinancialRecord = GlobalKey<FormState>();
+  final TextEditingController valueController = MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+
+  final formKeyPassword = GlobalKey<FormState>();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmNewPasswordController = TextEditingController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool isPressed = true;
   bool isOut = false;
   bool showPassword = false;
   bool showConfirmPassword = false;

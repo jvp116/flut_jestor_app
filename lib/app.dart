@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flut_jestor_app/pages/presenter/home_page.dart';
 import 'package:flut_jestor_app/pages/presenter/login_page.dart';
 import 'package:flut_jestor_app/pages/presenter/register_page.dart';
-import 'package:flut_jestor_app/pages/presenter/welcome_page.dart';
 import 'package:flut_jestor_app/services/financial_record_service.dart';
 import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
@@ -36,7 +35,7 @@ class _AppState extends State<App> {
         theme: ThemeData(scaffoldBackgroundColor: blue, fontFamily: 'Montserrat'),
         initialRoute: '/',
         routes: {
-          '/': (context) => const WelcomePage(),
+          '/': (context) => const HomePage(email: ''),
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const HomePage(email: ''),
