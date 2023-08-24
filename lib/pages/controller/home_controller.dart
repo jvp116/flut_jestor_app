@@ -1,10 +1,13 @@
 import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:intl/intl.dart';
 
 class HomeController {
   final formKeyNewFinancialRecord = GlobalKey<FormState>();
-  final TextEditingController valueController = MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+  var valueController = MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+  final TextEditingController dateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+  final TextEditingController descriptionController = TextEditingController();
 
   final formKeyPassword = GlobalKey<FormState>();
   final TextEditingController newPasswordController = TextEditingController();

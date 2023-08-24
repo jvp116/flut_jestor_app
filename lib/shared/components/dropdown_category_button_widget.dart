@@ -51,12 +51,11 @@ class _DropDownCategoryButtonWidgetState extends State<DropDownCategoryButtonWid
         builder: (FormFieldState<String> state) {
           return DropdownButton<String>(
             menuMaxHeight: 200,
-            borderRadius: BorderRadius.circular(10),
             hint: const Text("Selecione uma categoria"),
             value: dropdownValue,
             isExpanded: true,
             icon: const Icon(Icons.keyboard_arrow_down_rounded, color: blue, size: 36),
-            underline: Container(height: 1, color: const Color.fromRGBO(23, 93, 145, 0.25)),
+            underline: Container(height: 1.5, color: const Color.fromRGBO(23, 93, 145, 0.25)),
             onChanged: (newValue) {
               setState(() {
                 dropdownValue = newValue;

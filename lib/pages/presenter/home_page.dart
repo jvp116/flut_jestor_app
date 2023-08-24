@@ -6,6 +6,7 @@ import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/chart_data_model.dart';
 import '../../shared/utils/utils.dart';
@@ -247,48 +248,141 @@ class _HomePageState extends State<HomePage> {
                                   style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
                               const DropDownCategoryButtonWidget(),
                               const SizedBox(height: 16),
-                              const Text("valor", style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
-                              SizedBox(
-                                height: 36,
-                                child: TextFormField(
-                                  controller: controller.valueController,
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, RealInputFormatter(moeda: true)],
-                                  decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("valor",
+                                            style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                        TextFormField(
+                                          controller: controller.valueController,
+                                          inputFormatters: [FilteringTextInputFormatter.digitsOnly, RealInputFormatter(moeda: true)],
+                                          decoration: const InputDecoration(
+                                            border: UnderlineInputBorder(),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: blue),
+                                            ),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Por favor, digite um valor';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Por favor, digite um valor';
-                                    }
-                                    return null;
-                                  },
+                                  const SizedBox(width: 24),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("data",
+                                            style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                        TextField(
+                                          controller: controller.dateController,
+                                          decoration: const InputDecoration(
+                                            suffixIcon: Icon(Icons.edit_calendar_outlined, color: blue, size: 24),
+                                            border: UnderlineInputBorder(),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: blue),
+                                            ),
+                                          ),
+                                          readOnly: true,
+                                          onTap: () async {
+                                            DateTime? pickedDate = await showDatePicker(
+                                              builder: (context, child) {
+                                                return Theme(
+                                                  data: Theme.of(context).copyWith(
+                                                    colorScheme: const ColorScheme.light(
+                                                      primary: blue,
+                                                      onPrimary: Colors.white,
+                                                      onSurface: Colors.black,
+                                                    ),
+                                                    textButtonTheme: TextButtonThemeData(
+                                                      style: TextButton.styleFrom(foregroundColor: blue),
+                                                    ),
+                                                  ),
+                                                  child: child!,
+                                                );
+                                              },
+                                              locale: const Locale('pt', 'BR'),
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(2001),
+                                              lastDate: DateTime(2101),
+                                            );
+                                            if (pickedDate != null) {
+                                              String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+                                              setState(() {
+                                                controller.dateController.text = formattedDate;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              const Text("descrição",
+                                  style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                              TextFormField(
+                                controller: controller.descriptionController,
+                                decoration: const InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: blue),
+                                  ),
                                 ),
+                                keyboardType: TextInputType.text,
+                                maxLength: 40,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Por favor, digite uma descrição';
+                                  }
+                                  return null;
+                                },
                               ),
                             ],
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(56),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                          backgroundColor: greenLight,
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(64),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                            backgroundColor: greenLight,
+                            textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          child: const Text('Pronto', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
                         ),
-                        child: const Text('Pronto', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
                       ),
                     ],
                   );
                 },
-              );
+              ).then((value) {
+                controller.valueController.updateValue(0);
+                controller.dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+                controller.descriptionController.text = '';
+              });
             },
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(56),
