@@ -227,171 +227,174 @@ class _HomePageState extends State<HomePage> {
                     top: Radius.circular(10.0),
                   ),
                 ),
-                constraints: BoxConstraints.tight(
-                  Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
-                ),
+                isScrollControlled: true,
+                // constraints: BoxConstraints.tight(
+                //   Size(MediaQuery.of(context).size.width, 800),
+                // ),
                 builder: (BuildContext context) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(23, 93, 145, 0.15),
+                  return Wrap(
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            decoration: const BoxDecoration(
+                              color: Color.fromRGBO(23, 93, 145, 0.15),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text("Novo lançamento", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: blue)),
+                            ),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text("Novo lançamento", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: blue)),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Form(
-                            key: financialRecordController.formKeyNewFinancialRecord,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("categoria",
-                                    style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
-                                DropDownCategoryButtonWidget(financialRecordController: financialRecordController),
-                                const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Text("valor",
-                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
-                                          TextFormField(
-                                            controller: financialRecordController.valueController,
-                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly, RealInputFormatter(moeda: true)],
-                                            decoration: const InputDecoration(
-                                              border: UnderlineInputBorder(),
-                                              enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Form(
+                              key: financialRecordController.formKeyNewFinancialRecord,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("categoria",
+                                      style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                  DropDownCategoryButtonWidget(financialRecordController: financialRecordController),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("valor",
+                                                style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                            TextFormField(
+                                              controller: financialRecordController.valueController,
+                                              inputFormatters: [FilteringTextInputFormatter.digitsOnly, RealInputFormatter(moeda: true)],
+                                              decoration: const InputDecoration(
+                                                border: UnderlineInputBorder(),
+                                                enabledBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                                ),
+                                                focusedBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: blue),
+                                                ),
                                               ),
-                                              focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: blue),
-                                              ),
+                                              keyboardType: TextInputType.number,
+                                              validator: (value) {
+                                                value = UtilBrasilFields.removerSimboloMoeda(value!);
+                                                if (value == '0,00') {
+                                                  return 'Por favor, digite um valor';
+                                                }
+                                                return null;
+                                              },
                                             ),
-                                            keyboardType: TextInputType.number,
-                                            validator: (value) {
-                                              value = UtilBrasilFields.removerSimboloMoeda(value!);
-                                              if (value == '0,00') {
-                                                return 'Por favor, digite um valor';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 24),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Text("data",
-                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
-                                          TextField(
-                                            controller: financialRecordController.dateController,
-                                            decoration: const InputDecoration(
-                                              suffixIcon: Icon(Icons.edit_calendar_outlined, color: blue, size: 24),
-                                              border: UnderlineInputBorder(),
-                                              enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                      const SizedBox(width: 24),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("data",
+                                                style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                            TextField(
+                                              controller: financialRecordController.dateController,
+                                              decoration: const InputDecoration(
+                                                suffixIcon: Icon(Icons.edit_calendar_outlined, color: blue, size: 24),
+                                                border: UnderlineInputBorder(),
+                                                enabledBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                                ),
+                                                focusedBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: blue),
+                                                ),
                                               ),
-                                              focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: blue),
-                                              ),
+                                              readOnly: true,
+                                              onTap: () async {
+                                                DateTime? pickedDate = await showDatePicker(
+                                                  builder: (context, child) {
+                                                    return Theme(
+                                                      data: Theme.of(context).copyWith(
+                                                        colorScheme: const ColorScheme.light(
+                                                          primary: blue,
+                                                          onPrimary: Colors.white,
+                                                          onSurface: Colors.black,
+                                                        ),
+                                                        textButtonTheme: TextButtonThemeData(
+                                                          style: TextButton.styleFrom(foregroundColor: blue),
+                                                        ),
+                                                      ),
+                                                      child: child!,
+                                                    );
+                                                  },
+                                                  locale: const Locale('pt', 'BR'),
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  firstDate: DateTime(2001),
+                                                  lastDate: DateTime(2101),
+                                                );
+                                                if (pickedDate != null) {
+                                                  String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                  setState(() {
+                                                    financialRecordController.dateController.text = formattedDate;
+                                                  });
+                                                }
+                                              },
                                             ),
-                                            readOnly: true,
-                                            onTap: () async {
-                                              DateTime? pickedDate = await showDatePicker(
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: Theme.of(context).copyWith(
-                                                      colorScheme: const ColorScheme.light(
-                                                        primary: blue,
-                                                        onPrimary: Colors.white,
-                                                        onSurface: Colors.black,
-                                                      ),
-                                                      textButtonTheme: TextButtonThemeData(
-                                                        style: TextButton.styleFrom(foregroundColor: blue),
-                                                      ),
-                                                    ),
-                                                    child: child!,
-                                                  );
-                                                },
-                                                locale: const Locale('pt', 'BR'),
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(2001),
-                                                lastDate: DateTime(2101),
-                                              );
-                                              if (pickedDate != null) {
-                                                String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-                                                setState(() {
-                                                  financialRecordController.dateController.text = formattedDate;
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                const Text("descrição",
-                                    style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
-                                TextFormField(
-                                  controller: financialRecordController.descriptionController,
-                                  decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: blue),
-                                    ),
+                                    ],
                                   ),
-                                  keyboardType: TextInputType.text,
-                                  maxLength: 40,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Por favor, digite uma descrição';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
+                                  const SizedBox(height: 16),
+                                  const Text("descrição",
+                                      style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                  TextFormField(
+                                    controller: financialRecordController.descriptionController,
+                                    decoration: const InputDecoration(
+                                      border: UnderlineInputBorder(),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: blue),
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    maxLength: 40,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Por favor, digite uma descrição';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (financialRecordController.formKeyNewFinancialRecord.currentState!.validate()) {
-                                financialRecordController.createRecord().then((value) {
-                                  ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarSuccess('Lançamento cadastrado com sucesso!'));
-                                });
-                                Navigator.pop(context);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size.fromHeight(64),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                              backgroundColor: greenLight,
-                              textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (financialRecordController.formKeyNewFinancialRecord.currentState!.validate()) {
+                                  financialRecordController.createRecord().then((value) {
+                                    ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarSuccess('Lançamento cadastrado com sucesso!'));
+                                  });
+                                  Navigator.pop(context);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(64),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                backgroundColor: greenLight,
+                                textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                              child: const Text('Pronto', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
                             ),
-                            child: const Text('Pronto', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   );
                 },
               ).then((value) {

@@ -1,3 +1,4 @@
+import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/services/financial_record_service.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,13 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
 
   Future fetchRecords(String type, String month) async {
     value = LoadingFinancialRecordState();
+    List<FinancialRecordModel>? financialRecords;
     try {
-      final financialRecords = await service.fetchRecords(type, month);
+      financialRecords = await service.fetchRecords(type, month);
+
       value = SuccessFinancialRecordState(financialRecords);
     } catch (e) {
-      value = ErrorFinancialRecordState(e.toString());
+      value = InitialFinancialRecordState();
     }
   }
 

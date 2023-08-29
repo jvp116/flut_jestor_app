@@ -78,15 +78,20 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
       return const LoadingWidget();
     }
 
-    if (controller.state is ErrorFinancialRecordState) {
-      return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
+    if (controller.state is InitialFinancialRecordState) {
+      return const StartDefaultWidget(
+          iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui lançamentos cadastrados esse mês.');
     }
+
+    // if (controller.state is ErrorFinancialRecordState) {
+    //   return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
+    // }
 
     if (controller.state is SuccessFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
       return ListFinancialRecordPage(controller: controller);
     }
 
     return const StartDefaultWidget(
-        iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui nenhum lançamento cadastrado esse mês.');
+        iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui lançamentos cadastrados esse mês.');
   }
 }
