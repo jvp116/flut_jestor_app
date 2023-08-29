@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String basePath = "http://localhost:8080";
+const String basePath = "http://localhost:8080/api/v1";
 // 10.0.2.2
 
 // Colors

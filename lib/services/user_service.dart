@@ -18,7 +18,7 @@ class UserService {
         'password': password,
       };
 
-      Response response = await dio.post('$basePath/api/v1/auth/authenticate', data: data);
+      Response response = await dio.post('$basePath/auth/authenticate', data: data);
 
       if (response.statusCode == 200) {
         await sharedPreferences.setString('access_token', (response.data)['access_token']);
@@ -39,7 +39,7 @@ class UserService {
     try {
       Map<String, dynamic> data = {'email': email, 'password': password, 'role': 'USER'};
 
-      final response = await dio.post('$basePath/api/v1/auth/register', data: data);
+      final response = await dio.post('$basePath/auth/register', data: data);
 
       if (response.statusCode == 200) {
         await sharedPreferences.setString('access_token', (response.data)['access_token']);
@@ -61,7 +61,7 @@ class UserService {
 
       await sharedPreferences.clear();
 
-      final response = await dio.post('$basePath/api/v1/auth/logout');
+      final response = await dio.post('$basePath/auth/logout');
 
       if (response.statusCode == 200) {
         return true;
@@ -83,7 +83,7 @@ class UserService {
         'password': newPassword,
       };
 
-      response = await dio.put('$basePath/api/v1/user/password', data: data);
+      response = await dio.put('$basePath/user/password', data: data);
 
       if (response.statusCode == 200) {
         return true;
@@ -107,7 +107,7 @@ class UserService {
 
       await sharedPreferences.clear();
 
-      final response = await dio.delete('$basePath/api/v1/user', data: data);
+      final response = await dio.delete('$basePath/user', data: data);
 
       if (response.statusCode == 204) {
         return true;
@@ -125,7 +125,7 @@ class UserService {
     try {
       dio.options.headers["authorization"] = "Bearer $refreshToken";
 
-      final response = await dio.post('$basePath/api/v1/auth/refresh-token');
+      final response = await dio.post('$basePath/auth/refresh-token');
 
       if (response.statusCode == 200) {
         await sharedPreferences.setString('access_token', (response.data)['access_token']);

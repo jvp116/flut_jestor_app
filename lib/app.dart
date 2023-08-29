@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flut_jestor_app/pages/presenter/home_page.dart';
 import 'package:flut_jestor_app/pages/presenter/login_page.dart';
 import 'package:flut_jestor_app/pages/presenter/register_page.dart';
+import 'package:flut_jestor_app/pages/presenter/welcome_page.dart';
 import 'package:flut_jestor_app/services/financial_record_service.dart';
 import 'package:flut_jestor_app/services/user_service.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
@@ -28,14 +29,18 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (context) => FinancialRecordStore(context.read())),
       ],
       child: MaterialApp(
-        localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         supportedLocales: const [Locale('pt', 'BR')],
         title: 'Jestor',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: blue, fontFamily: 'Montserrat'),
         initialRoute: '/',
         routes: {
-          '/': (context) => const HomePage(email: ''),
+          '/': (context) => const WelcomePage(),
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const HomePage(email: ''),

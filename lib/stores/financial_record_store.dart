@@ -17,13 +17,13 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
     }
   }
 
-  // Future createCustomer(String cpf, String name, String lastname) async {
-  //   try {
-  //     return await service.createCustomer(cpf, name, lastname);
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+  Future createRecord(double value, String date, String description, int categoryId) async {
+    try {
+      return await service.createRecord(value, date, description, categoryId);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // Future<FinancialRecordModel> editCustomer(int id, String name, String lastname) async {
   //   try {
