@@ -285,7 +285,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   widget.controller.logout(service, sharedPreferences.getString('access_token')).then((value) {
                     Navigator.pushReplacementNamed(context, '/login');
                   }).onError((error, stackTrace) {
-                    ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarError("Ops, ocorreu algum erro inesperado"));
+                    Navigator.pushReplacementNamed(context, '/login');
                   });
                 },
               ),

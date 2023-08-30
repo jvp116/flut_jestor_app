@@ -16,7 +16,11 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
 
       value = SuccessFinancialRecordState(financialRecords);
     } catch (e) {
-      value = InitialFinancialRecordState();
+      if (e.toString().contains('403')) {
+        value = UnauthorizedFinancialRecordState();
+      } else {
+        value = ErrorFinancialRecordState(e.toString());
+      }
     }
   }
 

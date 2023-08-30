@@ -10,7 +10,6 @@ class FinancialRecordService {
 
   Future<List<FinancialRecordModel>> fetchRecords(String type, String month) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Response response = Response(requestOptions: RequestOptions());
 
     try {
       dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
@@ -21,8 +20,8 @@ class FinancialRecordService {
       final list = response.data as List;
       return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
     } catch (error) {
-      if (response.statusCode == 403) {
-        // TODO forbidden logar novamente no app para autenticar
+      if (error.toString().contains('403')) {
+        throw Exception('[403] Não autorizado: $error');
       }
       throw Exception('Ocorreu um erro durante a listagem de lançamentos: $error');
     }

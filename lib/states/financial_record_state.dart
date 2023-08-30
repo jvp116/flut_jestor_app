@@ -12,8 +12,10 @@ class SuccessFinancialRecordState extends FinancialRecordState {
 
 class LoadingFinancialRecordState extends FinancialRecordState {}
 
-// class ErrorFinancialRecordState extends FinancialRecordState {
-//   final String message;
+class ErrorFinancialRecordState extends FinancialRecordState {
+  final String message;
 
-//   ErrorFinancialRecordState(this.message);
-// }
+  ErrorFinancialRecordState(this.message);
+}
+
+class UnauthorizedFinancialRecordState extends FinancialRecordState {}
