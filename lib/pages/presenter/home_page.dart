@@ -221,16 +221,13 @@ class _HomePageState extends State<HomePage> {
           child: ElevatedButton(
             onPressed: () {
               showModalBottomSheet(
-                context: context,
+                context: controller.scaffoldKey.currentContext!,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(10.0),
                   ),
                 ),
                 isScrollControlled: true,
-                // constraints: BoxConstraints.tight(
-                //   Size(MediaQuery.of(context).size.width, 800),
-                // ),
                 builder: (BuildContext context) {
                   return Wrap(
                     children: [

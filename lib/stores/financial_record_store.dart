@@ -24,9 +24,9 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
     }
   }
 
-  Future createRecord(double value, String date, String description, int categoryId) async {
+  Future createRecord(double value, String date, String description, int categoryId, String type) async {
     try {
-      return await service.createRecord(value, date, description, categoryId);
+      return await service.createRecord(value, date, description, categoryId, type);
     } catch (e) {
       rethrow;
     }

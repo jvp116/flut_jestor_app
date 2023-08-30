@@ -17,7 +17,7 @@ class FinancialRecordService {
       Map<String, dynamic> data = {"email": email, "type": type, "month": month};
 
       final response = await dio.get('$basePath/financial-record', data: data);
-      final list = response.data as List;
+      final list = response.data == null ? [] : response.data as List;
       return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
     } catch (error) {
       if (error.toString().contains('403')) {
@@ -27,7 +27,7 @@ class FinancialRecordService {
     }
   }
 
-  Future<bool> createRecord(double value, String date, String description, int categoryId) async {
+  Future<bool> createRecord(double value, String date, String description, int categoryId, String type) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Response response = Response(requestOptions: RequestOptions());
 
@@ -40,6 +40,7 @@ class FinancialRecordService {
         'description': description,
         'date': date,
         'categoryId': categoryId,
+        'type': type,
         'email': email,
       };
 
