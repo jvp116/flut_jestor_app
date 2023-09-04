@@ -47,7 +47,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(
-                            _isPressed ? '10.000,00' : '',
+                            _isPressed ? UtilBrasilFields.obterReal(widget.controller.state.data.totalMes, moeda: false) : '',
                             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
                           ),
                           SizedBox(
@@ -84,9 +84,9 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: widget.controller.state.financialRecords.length,
+              itemCount: widget.controller.state.data.financialRecords.length,
               itemBuilder: (context, index) {
-                final financialRecord = widget.controller.state.financialRecords[index];
+                final financialRecord = widget.controller.state.data.financialRecords[index];
 
                 return ListTile(
                     contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),

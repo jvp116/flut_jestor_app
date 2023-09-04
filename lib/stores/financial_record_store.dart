@@ -10,11 +10,11 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
 
   Future fetchRecords(String type, String month) async {
     value = LoadingFinancialRecordState();
-    List<FinancialRecordModel>? financialRecords;
+    ListFinancialRecordModel? data;
     try {
-      financialRecords = await service.fetchRecords(type, month);
+      data = await service.fetchRecords(type, month);
 
-      value = SuccessFinancialRecordState(financialRecords);
+      value = SuccessFinancialRecordState(data);
     } catch (e) {
       if (e.toString().contains('403')) {
         value = UnauthorizedFinancialRecordState();
@@ -24,9 +24,9 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
     }
   }
 
-  Future createRecord(double value, String date, String description, int categoryId, String type) async {
+  Future createRecord(double value, String description, String date, int month, int categoryId, String type) async {
     try {
-      return await service.createRecord(value, date, description, categoryId, type);
+      return await service.createRecord(value, description, date, month, categoryId, type);
     } catch (e) {
       rethrow;
     }

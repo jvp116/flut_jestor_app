@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:dson_adapter/dson_adapter.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   final Dio dio;
-  final dson = const DSON();
 
   UserService(this.dio);
 

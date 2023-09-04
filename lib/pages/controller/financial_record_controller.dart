@@ -41,12 +41,13 @@ class FinancialRecordController extends ChangeNotifier {
 
   Future<void> createRecord() async {
     double value = UtilBrasilFields.converterMoedaParaDouble(valueController.text);
-    String date = dateController.text;
     String description = descriptionController.text;
+    String date = dateController.text;
+    int month = DateTime.parse(date).month;
     int categoryId = selectedCategory.id;
     String type = selectedCategory.type;
 
-    await store!.createRecord(value, date, description, categoryId, type);
+    await store!.createRecord(value, description, date, month, categoryId, type);
     notifyListeners();
   }
 

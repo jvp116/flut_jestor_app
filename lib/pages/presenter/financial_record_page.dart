@@ -98,7 +98,7 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
       return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
     }
 
-    if (controller.state is SuccessFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
+    if (controller.state is SuccessFinancialRecordState && controller.state.data.financialRecords.isNotEmpty) {
       return ListFinancialRecordPage(controller: controller);
     }
 

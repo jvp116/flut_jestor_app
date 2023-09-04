@@ -8,7 +8,7 @@ class FinancialRecordService {
 
   FinancialRecordService(this.dio);
 
-  Future<List<FinancialRecordModel>> fetchRecords(String type, String month) async {
+  Future<ListFinancialRecordModel> fetchRecords(String type, String month) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
@@ -17,8 +17,7 @@ class FinancialRecordService {
       Map<String, dynamic> data = {"email": email, "type": type, "month": month};
 
       final response = await dio.get('$basePath/financial-record', data: data);
-      final list = response.data == null ? [] : response.data as List;
-      return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
+      return ListFinancialRecordModel.fromMap(response.data);
     } catch (error) {
       if (error.toString().contains('403')) {
         throw Exception('[403] Não autorizado: $error');
@@ -27,9 +26,8 @@ class FinancialRecordService {
     }
   }
 
-  Future<bool> createRecord(double value, String date, String description, int categoryId, String type) async {
+  Future<bool> createRecord(double value, String description, String date, int month, int categoryId, String type) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Response response = Response(requestOptions: RequestOptions());
 
     try {
       dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
@@ -39,21 +37,20 @@ class FinancialRecordService {
         'value': value,
         'description': description,
         'date': date,
+        'month': month,
         'categoryId': categoryId,
         'type': type,
         'email': email,
       };
 
-      response = await dio.post('$basePath/financial-record', data: data);
+      final response = await dio.post('$basePath/financial-record', data: data);
 
       if (response.statusCode == 200) {
         return true;
       }
       return false;
     } catch (error) {
-      if (response.statusCode == 403) {
-        // TODO forbidden logar novamente no app para autenticar
-      }
+      // TODO forbidden logar novamente no app para autenticar
       throw Exception('Ocorreu um erro durante a criação de lançamento: $error');
     }
   }
