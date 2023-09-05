@@ -106,23 +106,61 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                     onTap: () {
                       showModalBottomSheet(
                         constraints: BoxConstraints.tight(Size(MediaQuery.of(context).size.width, 160)),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(10.0),
+                          ),
+                        ),
                         context: context,
                         builder: (BuildContext context) {
                           return SizedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("${financialRecord.id} ${financialRecord.description}", style: const TextStyle(fontSize: 24)),
-                                  const SizedBox(height: 16),
-                                  ElevatedButton(
-                                    child: const Text('Fechar'),
-                                    onPressed: () => Navigator.pop(context),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(23, 93, 145, 0.15),
                                   ),
-                                ],
-                              ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(financialRecord.description,
+                                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: blue)),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text("valor",
+                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text("data",
+                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text("categoria",
+                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  child: const Text('Fechar'),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
                             ),
                           );
                         },
