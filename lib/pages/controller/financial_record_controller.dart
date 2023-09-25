@@ -57,9 +57,8 @@ class FinancialRecordController extends ChangeNotifier {
     bool isDeleted = await store!.deleteRecord(financialRecord.id);
 
     if (isDeleted) {
-      state.customers.remove(financialRecord);
+      state.data.financialRecords.remove(financialRecord);
     }
-
     notifyListeners();
   }
 
