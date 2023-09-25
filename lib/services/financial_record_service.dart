@@ -66,11 +66,24 @@ class FinancialRecordService {
   //   return FinancialRecordModel.fromMap(response.data);
   // }
 
-  // Future<bool> deleteCustomer(int id) async {
-  //   var response = await dio.delete('$basePath/clientes/$id');
-  //   if (response.statusCode == 204) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  Future<bool> deleteRecord(int id) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    try {
+      dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
+      String? email = sharedPreferences.getString('email');
+      Map<String, dynamic> data = {"email": email};
+
+      var response = await dio.delete('$basePath/financial-record/$id', data: data);
+      if (response.statusCode == 204) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      if (error.toString().contains('403')) {
+        throw Exception('[403] Não autorizado: $error');
+      }
+      throw Exception('Ocorreu um erro durante a deleção do lançamento $id: $error');
+    }
+  }
 }

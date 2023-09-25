@@ -14,7 +14,7 @@ class FinancialRecordPage extends StatefulWidget {
   final String title;
   final String type;
 
-  const FinancialRecordPage({super.key, required this.title, required this.type});
+  const FinancialRecordPage({Key? key, required this.title, required this.type}) : super(key: key);
 
   @override
   State<FinancialRecordPage> createState() => _FinancialRecordPageState();

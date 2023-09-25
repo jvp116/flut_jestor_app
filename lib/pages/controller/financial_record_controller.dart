@@ -1,5 +1,6 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/models/category_model.dart';
+import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -43,11 +44,22 @@ class FinancialRecordController extends ChangeNotifier {
     double value = UtilBrasilFields.converterMoedaParaDouble(valueController.text);
     String description = descriptionController.text;
     String date = dateController.text;
-    int month = DateTime.parse(date).month;
+    int month = DateTime.parse(formatDate(date)).month;
+
     int categoryId = selectedCategory.id;
     String type = selectedCategory.type;
 
     await store!.createRecord(value, description, date, month, categoryId, type);
+    notifyListeners();
+  }
+
+  Future<void> deleteRecord(FinancialRecordModel financialRecord) async {
+    bool isDeleted = await store!.deleteRecord(financialRecord.id);
+
+    if (isDeleted) {
+      state.customers.remove(financialRecord);
+    }
+
     notifyListeners();
   }
 
@@ -58,5 +70,13 @@ class FinancialRecordController extends ChangeNotifier {
 
   String getDate(DateTime date) {
     return DateFormat("EEEE',' d MMM y", "pt_BR").format(date);
+  }
+
+  String formatDate(String date) {
+    String dia = date.split('/')[0];
+    String mes = date.split('/')[1];
+    String ano = date.split('/')[2];
+
+    return '$ano-$mes-$dia';
   }
 }

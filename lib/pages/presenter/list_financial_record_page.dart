@@ -105,7 +105,6 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: blue)),
                     onTap: () {
                       showModalBottomSheet(
-                        constraints: BoxConstraints.tight(Size(MediaQuery.of(context).size.width, 160)),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(10.0),
@@ -129,36 +128,154 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: blue)),
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
                                     children: [
-                                      Column(
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("valor",
-                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Text("valor",
+                                                  style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                              const SizedBox(height: 4),
+                                              Text(UtilBrasilFields.obterReal(financialRecord.value),
+                                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: blue)),
+                                            ],
+                                          ),
+                                          Container(
+                                            width: 1,
+                                            height: 60,
+                                            color: blueAccent,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Text("data",
+                                                  style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                              const SizedBox(height: 4),
+                                              Text(UtilData.obterDataDDMMAAAA(DateTime.parse(financialRecord.date)),
+                                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: blue)),
+                                            ],
+                                          ),
+                                          Container(
+                                            width: 1,
+                                            height: 60,
+                                            color: blueAccent,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Text("categoria",
+                                                  style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                              const SizedBox(height: 4),
+                                              Text(financialRecord.category.description,
+                                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: blue)),
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                      Column(
+                                      const SizedBox(height: 16),
+                                      Row(
                                         children: [
-                                          Text("data",
-                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text("categoria",
-                                              style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
+                                          ElevatedButton.icon(
+                                            onPressed: () {},
+                                            icon: const Icon(
+                                              Icons.edit_rounded,
+                                              color: purple,
+                                            ),
+                                            label: const Text(
+                                              'Editar',
+                                              style: TextStyle(color: purple, fontFamily: 'Montserrat'),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              padding: const EdgeInsets.all(20),
+                                              side: const BorderSide(color: purple, width: 2),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                              backgroundColor: const Color.fromARGB(255, 245, 235, 247),
+                                              textStyle: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          ElevatedButton.icon(
+                                            onPressed: () {
+                                              showDialog<String>(
+                                                context: context,
+                                                builder: (BuildContext context) => AlertDialog(
+                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                  title: const Text(
+                                                    'Excluir lançamento',
+                                                    style:
+                                                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: blue),
+                                                  ),
+                                                  content: const Text(
+                                                    'Você tem certeza de que deseja excluir os dados do lançamento?',
+                                                    style:
+                                                        TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Montserrat', color: blue),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pop(context),
+                                                      child: const Text(
+                                                        'Não',
+                                                        style: TextStyle(
+                                                            fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: red),
+                                                      ),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        widget.controller.deleteRecord(financialRecord).then((value) {
+                                                          ScaffoldMessenger.of(context)
+                                                              .showSnackBar(Utils().snackBarSuccess("Lançamento excluído com sucesso"));
+                                                        }).onError((error, stackTrace) {
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                              Utils().snackBarError("Ops, não foi possível excluir os dados tente mais tarde"));
+                                                        });
+                                                      },
+                                                      child: const Text(
+                                                        'Sim',
+                                                        style: TextStyle(
+                                                            fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: greenLight),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete_outlined,
+                                              color: red,
+                                            ),
+                                            label: const Text(
+                                              'Excluir',
+                                              style: TextStyle(color: red, fontFamily: 'Montserrat'),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              padding: const EdgeInsets.all(20),
+                                              side: const BorderSide(color: red, width: 2),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                              backgroundColor: const Color.fromARGB(255, 249, 235, 234),
+                                              textStyle: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                ElevatedButton(
-                                  child: const Text('Fechar'),
-                                  onPressed: () => Navigator.pop(context),
                                 ),
                               ],
                             ),
