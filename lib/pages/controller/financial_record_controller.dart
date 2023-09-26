@@ -78,4 +78,16 @@ class FinancialRecordController extends ChangeNotifier {
 
     return '$ano-$mes-$dia';
   }
+
+  MoneyMaskedTextController getValueForEdit(double value) {
+    return MoneyMaskedTextController(initialValue: value, decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+  }
+
+  TextEditingController getDateForEdit(String date) {
+    return TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.parse(date)));
+  }
+
+  TextEditingController getDescriptionForEdit(String description) {
+    return TextEditingController(text: description);
+  }
 }

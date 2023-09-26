@@ -2,6 +2,8 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class ListFinancialRecordPage extends StatefulWidget {
   final FinancialRecordController controller;
@@ -13,6 +15,7 @@ class ListFinancialRecordPage extends StatefulWidget {
 }
 
 class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
+  final FinancialRecordController financialRecordController = FinancialRecordController();
   bool _isPressed = true;
 
   @override
@@ -142,7 +145,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                   style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
                                               const SizedBox(height: 4),
                                               Text(UtilBrasilFields.obterReal(financialRecord.value),
-                                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: blue)),
+                                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                             ],
                                           ),
                                           Container(
@@ -157,7 +160,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                   style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
                                               const SizedBox(height: 4),
                                               Text(UtilData.obterDataDDMMAAAA(DateTime.parse(financialRecord.date)),
-                                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: blue)),
+                                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                             ],
                                           ),
                                           Container(
@@ -172,7 +175,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                   style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5), fontWeight: FontWeight.w500, fontSize: 12)),
                                               const SizedBox(height: 4),
                                               Text(financialRecord.category.description,
-                                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: blue)),
+                                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                             ],
                                           ),
                                         ],
@@ -181,7 +184,210 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                       Row(
                                         children: [
                                           ElevatedButton.icon(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                shape: const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.vertical(
+                                                    top: Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                                isScrollControlled: true,
+                                                builder: (BuildContext context) {
+                                                  return Wrap(
+                                                    children: [
+                                                      Column(
+                                                        children: [
+                                                          Container(
+                                                            alignment: Alignment.centerLeft,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color.fromRGBO(23, 93, 145, 0.15),
+                                                            ),
+                                                            child: const Padding(
+                                                              padding: EdgeInsets.all(16.0),
+                                                              child: Text("Editar lançamento",
+                                                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: blue)),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(16.0),
+                                                            child: Form(
+                                                              key: financialRecordController.formKeyNewFinancialRecord,
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  const Text("categoria",
+                                                                      style: TextStyle(
+                                                                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                                                                          fontWeight: FontWeight.w500,
+                                                                          fontSize: 12)),
+                                                                  const SizedBox(height: 8),
+                                                                  Text(financialRecord.category.description,
+                                                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
+                                                                  const SizedBox(height: 16),
+                                                                  Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            const Text("valor",
+                                                                                style: TextStyle(
+                                                                                    color: Color.fromRGBO(0, 0, 0, 0.5),
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                    fontSize: 12)),
+                                                                            TextFormField(
+                                                                              controller:
+                                                                                  financialRecordController.getValueForEdit(financialRecord.value),
+                                                                              inputFormatters: [
+                                                                                FilteringTextInputFormatter.digitsOnly,
+                                                                                RealInputFormatter(moeda: true)
+                                                                              ],
+                                                                              decoration: const InputDecoration(
+                                                                                border: UnderlineInputBorder(),
+                                                                                enabledBorder: UnderlineInputBorder(
+                                                                                  borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                                                                ),
+                                                                                focusedBorder: UnderlineInputBorder(
+                                                                                  borderSide: BorderSide(color: blue),
+                                                                                ),
+                                                                              ),
+                                                                              keyboardType: TextInputType.number,
+                                                                              validator: (value) {
+                                                                                value = UtilBrasilFields.removerSimboloMoeda(value!);
+                                                                                if (value == '0,00') {
+                                                                                  return 'Por favor, digite um valor';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(width: 24),
+                                                                      Expanded(
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            const Text("data",
+                                                                                style: TextStyle(
+                                                                                    color: Color.fromRGBO(0, 0, 0, 0.5),
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                    fontSize: 12)),
+                                                                            TextField(
+                                                                              controller:
+                                                                                  financialRecordController.getDateForEdit(financialRecord.date),
+                                                                              decoration: const InputDecoration(
+                                                                                suffixIcon: Icon(Icons.edit_calendar_outlined, color: blue, size: 24),
+                                                                                border: UnderlineInputBorder(),
+                                                                                enabledBorder: UnderlineInputBorder(
+                                                                                  borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                                                                ),
+                                                                                focusedBorder: UnderlineInputBorder(
+                                                                                  borderSide: BorderSide(color: blue),
+                                                                                ),
+                                                                              ),
+                                                                              readOnly: true,
+                                                                              onTap: () async {
+                                                                                DateTime? pickedDate = await showDatePicker(
+                                                                                  builder: (context, child) {
+                                                                                    return Theme(
+                                                                                      data: Theme.of(context).copyWith(
+                                                                                        colorScheme: const ColorScheme.light(
+                                                                                          primary: blue,
+                                                                                          onPrimary: Colors.white,
+                                                                                          onSurface: Colors.black,
+                                                                                        ),
+                                                                                        textButtonTheme: TextButtonThemeData(
+                                                                                          style: TextButton.styleFrom(foregroundColor: blue),
+                                                                                        ),
+                                                                                      ),
+                                                                                      child: child!,
+                                                                                    );
+                                                                                  },
+                                                                                  locale: const Locale('pt', 'BR'),
+                                                                                  context: context,
+                                                                                  initialDate: DateTime.parse(financialRecord.date),
+                                                                                  firstDate: DateTime(2001),
+                                                                                  lastDate: DateTime(2101),
+                                                                                );
+                                                                                if (pickedDate != null) {
+                                                                                  String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                                                  setState(() {
+                                                                                    financialRecordController.dateController.text = formattedDate;
+                                                                                  });
+                                                                                }
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(height: 16),
+                                                                  const Text("descrição",
+                                                                      style: TextStyle(
+                                                                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                                                                          fontWeight: FontWeight.w500,
+                                                                          fontSize: 12)),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        financialRecordController.getDescriptionForEdit(financialRecord.description),
+                                                                    decoration: const InputDecoration(
+                                                                      border: UnderlineInputBorder(),
+                                                                      enabledBorder: UnderlineInputBorder(
+                                                                        borderSide: BorderSide(color: Color.fromRGBO(23, 93, 145, 0.25)),
+                                                                      ),
+                                                                      focusedBorder: UnderlineInputBorder(
+                                                                        borderSide: BorderSide(color: blue),
+                                                                      ),
+                                                                    ),
+                                                                    keyboardType: TextInputType.text,
+                                                                    maxLength: 40,
+                                                                    validator: (value) {
+                                                                      if (value!.isEmpty) {
+                                                                        return 'Por favor, digite uma descrição';
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(24),
+                                                            child: ElevatedButton(
+                                                              onPressed: () {
+                                                                if (financialRecordController.formKeyNewFinancialRecord.currentState!.validate()) {
+                                                                  financialRecordController.createRecord().then((value) {
+                                                                    ScaffoldMessenger.of(context)
+                                                                        .showSnackBar(Utils().snackBarSuccess('Lançamento cadastrado com sucesso!'));
+                                                                  });
+                                                                  Navigator.pop(context);
+                                                                }
+                                                              },
+                                                              style: ElevatedButton.styleFrom(
+                                                                minimumSize: const Size.fromHeight(64),
+                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                                                backgroundColor: greenLight,
+                                                                textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                                              ),
+                                                              child: const Text('Pronto',
+                                                                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ).then((value) {
+                                                financialRecordController.valueController.updateValue(0);
+                                                financialRecordController.dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+                                                financialRecordController.descriptionController.text = '';
+                                              });
+                                            },
                                             icon: const Icon(
                                               Icons.edit_rounded,
                                               color: purple,
