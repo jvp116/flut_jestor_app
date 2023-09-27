@@ -48,9 +48,14 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                             textAlign: TextAlign.start,
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
-                          Text(
-                            _isPressed ? UtilBrasilFields.obterReal(widget.controller.state.data.totalMes, moeda: false) : '',
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+                          AnimatedBuilder(
+                            animation: widget.controller,
+                            builder: (context, child) {
+                              return Text(
+                                _isPressed ? UtilBrasilFields.obterReal(widget.controller.state.data.totalMes, moeda: false) : '',
+                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+                              );
+                            },
                           ),
                           SizedBox(
                             width: _isPressed ? 0 : 132,

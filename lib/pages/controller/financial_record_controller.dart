@@ -69,11 +69,40 @@ class FinancialRecordController extends ChangeNotifier {
     bool isEdited = await store!.editRecord(financialRecord.id, value, description, date, month, type);
 
     if (isEdited) {
+      changeTotalMes(dateIsDifferent(financialRecord.date, date), value, financialRecord);
+      changeListRecords(
+          dateIsDifferent(financialRecord.date, date), value, financialRecord, formatDate(date), description, categoryEditController.text);
+    }
+    notifyListeners();
+  }
+
+  void changeListRecords(
+      bool monthIsDifferent, double value, FinancialRecordModel financialRecord, String date, String description, String categoryDescription) {
+    if (monthIsDifferent) {
+      state.data.financialRecords.removeAt(recoverIndex(financialRecord.id));
+    } else {
       state.data.financialRecords.insert(
           recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, formatDate(date), description, categoryEditController.text));
       state.data.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
     }
-    notifyListeners();
+  }
+
+  void changeTotalMes(bool monthIsDifferent, double value, FinancialRecordModel financialRecord) {
+    if (monthIsDifferent) {
+      state.data.totalMes -= financialRecord.value;
+    } else {
+      state.data.totalMes = state.data.totalMes + (value - financialRecord.value);
+    }
+  }
+
+  bool dateIsDifferent(String oldDate, String newDate) {
+    String oldMonth = oldDate.split('-')[1];
+    String newMonth = newDate.split('/')[1];
+
+    String oldYear = oldDate.split('-')[2];
+    String newYear = newDate.split('/')[2];
+
+    return (oldMonth != newMonth) || (oldYear != newYear);
   }
 
   int recoverIndex(int id) {
