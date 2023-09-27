@@ -55,16 +55,33 @@ class FinancialRecordService {
     }
   }
 
-  // Future<FinancialRecordModel> editCustomer(int id, String name, String lastname) async {
-  //   Map<String, dynamic> data = {
-  //     'nome': name,
-  //     'sobrenome': lastname,
-  //   };
+  Future<bool> editRecord(int id, double value, String description, String date, int month, String type) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-  //   final response = await dio.put('$basePath/clientes/$id', data: data);
+    try {
+      dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
+      String? email = sharedPreferences.getString('email');
 
-  //   return FinancialRecordModel.fromMap(response.data);
-  // }
+      Map<String, dynamic> data = {
+        'value': value,
+        'description': description,
+        'date': date,
+        'month': month,
+        'type': type,
+        'email': email,
+      };
+
+      final response = await dio.put('$basePath/financial-record/$id', data: data);
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      // TODO forbidden logar novamente no app para autenticar
+      throw Exception('Ocorreu um erro durante a criação de lançamento: $error');
+    }
+  }
 
   Future<bool> deleteRecord(int id) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

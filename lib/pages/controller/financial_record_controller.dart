@@ -15,6 +15,12 @@ class FinancialRecordController extends ChangeNotifier {
   final TextEditingController dateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
   final TextEditingController descriptionController = TextEditingController();
 
+  final formKeyEditFinancialRecord = GlobalKey<FormState>();
+  TextEditingController categoryEditController = TextEditingController();
+  var valueEditController = MoneyMaskedTextController();
+  TextEditingController dateEditController = TextEditingController();
+  TextEditingController descriptionEditController = TextEditingController();
+
   List<CategoryModel> listCategories = <CategoryModel>[
     CategoryModel(id: 1, description: 'Alimentação', icon: 'food', color: 'D10202', type: 'S'),
     CategoryModel(id: 2, description: 'Bônus', icon: 'gift', color: '00A5CF', type: 'E'),
@@ -53,10 +59,51 @@ class FinancialRecordController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> editRecord(FinancialRecordModel financialRecord) async {
+    double value = UtilBrasilFields.converterMoedaParaDouble(valueEditController.text);
+    String date = dateEditController.text;
+    String description = descriptionEditController.text;
+    int month = DateTime.parse(formatDate(date)).month;
+    String type = getTypeCategoryForEdit(categoryEditController.text);
+
+    bool isEdited = await store!.editRecord(financialRecord.id, value, description, date, month, type);
+
+    if (isEdited) {
+      state.data.financialRecords.insert(
+          recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, formatDate(date), description, categoryEditController.text));
+      state.data.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
+    }
+    notifyListeners();
+  }
+
+  int recoverIndex(int id) {
+    for (var obj in state.data.financialRecords) {
+      if (obj.id == id) {
+        return state.data.financialRecords.indexOf(obj);
+      }
+    }
+    return 0;
+  }
+
+  FinancialRecordModel getEditedRecord(
+      FinancialRecordModel oldFinancialRecord, double value, String date, String description, String categoryDescription) {
+    late CategoryModel categoryModel;
+    for (var category in listCategories) {
+      if (category.description == categoryDescription) {
+        categoryModel = category;
+      }
+    }
+
+    FinancialRecordModel editedRecord =
+        FinancialRecordModel(id: oldFinancialRecord.id, value: value, date: date, description: description, category: categoryModel);
+    return editedRecord;
+  }
+
   Future<void> deleteRecord(FinancialRecordModel financialRecord) async {
     bool isDeleted = await store!.deleteRecord(financialRecord.id);
 
     if (isDeleted) {
+      state.data.totalMes - financialRecord.value;
       state.data.financialRecords.remove(financialRecord);
     }
     notifyListeners();
@@ -79,15 +126,33 @@ class FinancialRecordController extends ChangeNotifier {
     return '$ano-$mes-$dia';
   }
 
+  String getTypeCategoryForEdit(String categoryDescription) {
+    for (var category in listCategories) {
+      if (category.description == categoryDescription) {
+        return category.type;
+      }
+    }
+
+    return '';
+  }
+
+  TextEditingController getCategoryForEdit(String category) {
+    categoryEditController = TextEditingController(text: category);
+    return categoryEditController;
+  }
+
   MoneyMaskedTextController getValueForEdit(double value) {
-    return MoneyMaskedTextController(initialValue: value, decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+    valueEditController = MoneyMaskedTextController(initialValue: value, decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+    return valueEditController;
   }
 
   TextEditingController getDateForEdit(String date) {
-    return TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.parse(date)));
+    dateEditController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.parse(date)));
+    return dateEditController;
   }
 
   TextEditingController getDescriptionForEdit(String description) {
-    return TextEditingController(text: description);
+    descriptionEditController = TextEditingController(text: description);
+    return descriptionEditController;
   }
 }

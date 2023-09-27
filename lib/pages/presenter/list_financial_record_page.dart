@@ -8,14 +8,13 @@ import 'package:intl/intl.dart';
 class ListFinancialRecordPage extends StatefulWidget {
   final FinancialRecordController controller;
 
-  const ListFinancialRecordPage({super.key, required this.controller});
+  const ListFinancialRecordPage({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<ListFinancialRecordPage> createState() => _ListFinancialRecordPageState();
 }
 
 class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
-  final FinancialRecordController financialRecordController = FinancialRecordController();
   bool _isPressed = true;
 
   @override
@@ -212,7 +211,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                           Padding(
                                                             padding: const EdgeInsets.all(16.0),
                                                             child: Form(
-                                                              key: financialRecordController.formKeyNewFinancialRecord,
+                                                              key: widget.controller.formKeyEditFinancialRecord,
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
@@ -221,8 +220,10 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                                           color: Color.fromRGBO(0, 0, 0, 0.5),
                                                                           fontWeight: FontWeight.w500,
                                                                           fontSize: 12)),
-                                                                  const SizedBox(height: 8),
-                                                                  Text(financialRecord.category.description,
+                                                                  TextFormField(
+                                                                      controller:
+                                                                          widget.controller.getCategoryForEdit(financialRecord.category.description),
+                                                                      enabled: false,
                                                                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                                                   const SizedBox(height: 16),
                                                                   Row(
@@ -237,8 +238,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontSize: 12)),
                                                                             TextFormField(
-                                                                              controller:
-                                                                                  financialRecordController.getValueForEdit(financialRecord.value),
+                                                                              controller: widget.controller.getValueForEdit(financialRecord.value),
                                                                               inputFormatters: [
                                                                                 FilteringTextInputFormatter.digitsOnly,
                                                                                 RealInputFormatter(moeda: true)
@@ -275,8 +275,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontSize: 12)),
                                                                             TextField(
-                                                                              controller:
-                                                                                  financialRecordController.getDateForEdit(financialRecord.date),
+                                                                              controller: widget.controller.getDateForEdit(financialRecord.date),
                                                                               decoration: const InputDecoration(
                                                                                 suffixIcon: Icon(Icons.edit_calendar_outlined, color: blue, size: 24),
                                                                                 border: UnderlineInputBorder(),
@@ -314,7 +313,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                                                 if (pickedDate != null) {
                                                                                   String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
                                                                                   setState(() {
-                                                                                    financialRecordController.dateController.text = formattedDate;
+                                                                                    widget.controller.dateEditController.text = formattedDate;
                                                                                   });
                                                                                 }
                                                                               },
@@ -331,8 +330,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                                           fontWeight: FontWeight.w500,
                                                                           fontSize: 12)),
                                                                   TextFormField(
-                                                                    controller:
-                                                                        financialRecordController.getDescriptionForEdit(financialRecord.description),
+                                                                    controller: widget.controller.getDescriptionForEdit(financialRecord.description),
                                                                     decoration: const InputDecoration(
                                                                       border: UnderlineInputBorder(),
                                                                       enabledBorder: UnderlineInputBorder(
@@ -359,12 +357,16 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                             padding: const EdgeInsets.all(24),
                                                             child: ElevatedButton(
                                                               onPressed: () {
-                                                                if (financialRecordController.formKeyNewFinancialRecord.currentState!.validate()) {
-                                                                  financialRecordController.createRecord().then((value) {
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                                if (widget.controller.formKeyEditFinancialRecord.currentState!.validate()) {
+                                                                  widget.controller.editRecord(financialRecord).then((value) {
                                                                     ScaffoldMessenger.of(context)
-                                                                        .showSnackBar(Utils().snackBarSuccess('Lançamento cadastrado com sucesso!'));
+                                                                        .showSnackBar(Utils().snackBarSuccess('Lançamento editado com sucesso!'));
+                                                                  }).onError((error, stackTrace) {
+                                                                    ScaffoldMessenger.of(context).showSnackBar(Utils()
+                                                                        .snackBarError("Ops, não foi possível editar os dados tente mais tarde"));
                                                                   });
-                                                                  Navigator.pop(context);
                                                                 }
                                                               },
                                                               style: ElevatedButton.styleFrom(
@@ -382,11 +384,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                                                     ],
                                                   );
                                                 },
-                                              ).then((value) {
-                                                financialRecordController.valueController.updateValue(0);
-                                                financialRecordController.dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-                                                financialRecordController.descriptionController.text = '';
-                                              });
+                                              );
                                             },
                                             icon: const Icon(
                                               Icons.edit_rounded,
