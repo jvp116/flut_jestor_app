@@ -27,7 +27,7 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FinancialRecordStore>().fetchRecords(widget.type, DateFormat.M().format(DateTime.now()));
+      context.read<FinancialRecordStore>().fetchRecords(widget.type, DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
     });
   }
 

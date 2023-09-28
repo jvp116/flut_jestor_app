@@ -8,11 +8,11 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
 
   FinancialRecordStore(this.service) : super(InitialFinancialRecordState());
 
-  Future fetchRecords(String type, String month) async {
+  Future fetchRecords(String type, String month, String year) async {
     value = LoadingFinancialRecordState();
     ListFinancialRecordModel? data;
     try {
-      data = await service.fetchRecords(type, month);
+      data = await service.fetchRecords(type, month, year);
 
       value = SuccessFinancialRecordState(data);
     } catch (e) {

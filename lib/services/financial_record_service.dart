@@ -8,13 +8,13 @@ class FinancialRecordService {
 
   FinancialRecordService(this.dio);
 
-  Future<ListFinancialRecordModel> fetchRecords(String type, String month) async {
+  Future<ListFinancialRecordModel> fetchRecords(String type, String month, String year) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
       dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
       String? email = sharedPreferences.getString('email');
-      Map<String, dynamic> data = {"email": email, "type": type, "month": month};
+      Map<String, dynamic> data = {"email": email, "type": type, "month": month, "year": year};
 
       final response = await dio.get('$basePath/financial-record', data: data);
       return ListFinancialRecordModel.fromMap(response.data);
