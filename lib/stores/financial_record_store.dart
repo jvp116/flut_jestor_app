@@ -40,9 +40,9 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
     }
   }
 
-  Future deleteRecord(int id) async {
+  Future deleteRecord(int id, String type, int month, int year) async {
     try {
-      return await service.deleteRecord(id);
+      return await service.deleteRecord(id, type, month, year);
     } catch (e) {
       rethrow;
     }

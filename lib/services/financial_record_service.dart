@@ -85,13 +85,24 @@ class FinancialRecordService {
     }
   }
 
-  Future<bool> deleteRecord(int id) async {
+  Future<bool> deleteRecord(
+    int id,
+    String type,
+    int month,
+    int year,
+  ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
       dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
       String? email = sharedPreferences.getString('email');
-      Map<String, dynamic> data = {"email": email};
+
+      Map<String, dynamic> data = {
+        'email': email,
+        'type': type,
+        'month': month,
+        'year': year,
+      };
 
       var response = await dio.delete('$basePath/financial-record/$id', data: data);
       if (response.statusCode == 204) {

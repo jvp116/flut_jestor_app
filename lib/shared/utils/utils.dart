@@ -31,6 +31,7 @@ class Utils {
       ),
       backgroundColor: red,
       behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 2),
     );
   }
 
@@ -42,6 +43,7 @@ class Utils {
       ),
       backgroundColor: green,
       behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 2),
     );
   }
 }

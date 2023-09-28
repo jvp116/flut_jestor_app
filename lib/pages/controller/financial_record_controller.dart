@@ -129,7 +129,10 @@ class FinancialRecordController extends ChangeNotifier {
   }
 
   Future<void> deleteRecord(FinancialRecordModel financialRecord) async {
-    bool isDeleted = await store!.deleteRecord(financialRecord.id);
+    int month = DateTime.parse(financialRecord.date).month;
+    int year = DateTime.parse(financialRecord.date).year;
+
+    bool isDeleted = await store!.deleteRecord(financialRecord.id, financialRecord.category.type, month, year);
 
     if (isDeleted) {
       state.data.totalMes -= financialRecord.value;
