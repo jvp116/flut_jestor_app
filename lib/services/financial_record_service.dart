@@ -26,7 +26,7 @@ class FinancialRecordService {
     }
   }
 
-  Future<bool> createRecord(double value, String description, String date, int month, int categoryId, String type) async {
+  Future<bool> createRecord(double value, String description, String date, int month, int year, int categoryId, String type) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
@@ -38,6 +38,7 @@ class FinancialRecordService {
         'description': description,
         'date': date,
         'month': month,
+        'year': year,
         'categoryId': categoryId,
         'type': type,
         'email': email,

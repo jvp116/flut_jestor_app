@@ -51,11 +51,12 @@ class FinancialRecordController extends ChangeNotifier {
     String description = descriptionController.text;
     String date = dateController.text;
     int month = DateTime.parse(formatDate(date)).month;
+    int year = DateTime.parse(formatDate(date)).year;
 
     int categoryId = selectedCategory.id;
     String type = selectedCategory.type;
 
-    await store!.createRecord(value, description, date, month, categoryId, type);
+    await store!.createRecord(value, description, date, month, year, categoryId, type);
     notifyListeners();
   }
 
