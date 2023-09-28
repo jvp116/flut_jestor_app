@@ -125,16 +125,14 @@ class FinancialRecordController extends ChangeNotifier {
       }
     }
 
-    FinancialRecordModel editedRecord =
-        FinancialRecordModel(id: oldFinancialRecord.id, value: value, date: date, description: description, category: categoryModel);
-    return editedRecord;
+    return FinancialRecordModel(id: oldFinancialRecord.id, value: value, date: date, description: description, category: categoryModel);
   }
 
   Future<void> deleteRecord(FinancialRecordModel financialRecord) async {
     bool isDeleted = await store!.deleteRecord(financialRecord.id);
 
     if (isDeleted) {
-      state.data.totalMes - financialRecord.value;
+      state.data.totalMes -= financialRecord.value;
       state.data.financialRecords.remove(financialRecord);
     }
     notifyListeners();
