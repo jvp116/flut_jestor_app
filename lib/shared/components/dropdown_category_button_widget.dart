@@ -28,7 +28,7 @@ class _DropDownCategoryButtonWidgetState extends State<DropDownCategoryButtonWid
             widget.financialRecordController.selectedCategory = newValue!;
           });
         },
-        items: widget.financialRecordController.listCategories.map((CategoryModel value) {
+        items: listCategories.map((CategoryModel value) {
           return DropdownMenuItem<CategoryModel>(
             value: value,
             child: Text(value.description),
