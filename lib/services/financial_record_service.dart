@@ -56,7 +56,7 @@ class FinancialRecordService {
     }
   }
 
-  Future<bool> editRecord(int id, double value, String description, String date, int month, String type) async {
+  Future<bool> editRecord(int id, double value, String description, String date, int month, int year, String type) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
@@ -68,6 +68,7 @@ class FinancialRecordService {
         'description': description,
         'date': date,
         'month': month,
+        'year': year,
         'type': type,
         'email': email,
       };

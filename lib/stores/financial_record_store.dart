@@ -32,9 +32,9 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
     }
   }
 
-  Future editRecord(int id, double value, String description, String date, int month, String type) async {
+  Future editRecord(int id, double value, String description, String date, int month, int year, String type) async {
     try {
-      return await service.editRecord(id, value, description, date, month, type);
+      return await service.editRecord(id, value, description, date, month, year, type);
     } catch (e) {
       rethrow;
     }

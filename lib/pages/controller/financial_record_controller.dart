@@ -65,9 +65,10 @@ class FinancialRecordController extends ChangeNotifier {
     String date = dateEditController.text;
     String description = descriptionEditController.text;
     int month = DateTime.parse(formatDate(date)).month;
+    int year = DateTime.parse(formatDate(date)).year;
     String type = getTypeCategoryForEdit(categoryEditController.text);
 
-    bool isEdited = await store!.editRecord(financialRecord.id, value, description, date, month, type);
+    bool isEdited = await store!.editRecord(financialRecord.id, value, description, date, month, year, type);
 
     if (isEdited) {
       changeTotalMes(dateIsDifferent(financialRecord.date, date), value, financialRecord);
@@ -82,8 +83,8 @@ class FinancialRecordController extends ChangeNotifier {
     if (monthIsDifferent) {
       state.data.financialRecords.removeAt(recoverIndex(financialRecord.id));
     } else {
-      state.data.financialRecords.insert(
-          recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, formatDate(date), description, categoryEditController.text));
+      state.data.financialRecords
+          .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
       state.data.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
     }
   }
@@ -100,7 +101,7 @@ class FinancialRecordController extends ChangeNotifier {
     String oldMonth = oldDate.split('-')[1];
     String newMonth = newDate.split('/')[1];
 
-    String oldYear = oldDate.split('-')[2];
+    String oldYear = oldDate.split('-')[0];
     String newYear = newDate.split('/')[2];
 
     return (oldMonth != newMonth) || (oldYear != newYear);
@@ -154,6 +155,14 @@ class FinancialRecordController extends ChangeNotifier {
     String ano = date.split('/')[2];
 
     return '$ano-$mes-$dia';
+  }
+
+  String formatDateForEdit(String date) {
+    String dia = date.split('-')[2];
+    String mes = date.split('-')[1];
+    String ano = date.split('-')[0];
+
+    return '$dia/$mes/$ano';
   }
 
   String getTypeCategoryForEdit(String categoryDescription) {
