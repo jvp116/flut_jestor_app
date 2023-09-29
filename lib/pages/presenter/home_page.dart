@@ -2,6 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/pages/controller/home_controller.dart';
 import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
+import 'package:flut_jestor_app/pages/presenter/search_record_page.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
@@ -53,7 +54,12 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchRecordPage()),
+              );
+            },
             icon: const Icon(Icons.search_outlined, color: Colors.white),
           ),
           IconButton(
