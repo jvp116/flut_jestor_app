@@ -1,5 +1,5 @@
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
-import 'package:flut_jestor_app/shared/components/list_records_widget.dart';
+import 'package:flut_jestor_app/shared/components/list_all_records_widget.dart';
 import 'package:flut_jestor_app/shared/components/loading_widget.dart';
 import 'package:flut_jestor_app/shared/components/screen_forbidden_widget.dart';
 import 'package:flut_jestor_app/shared/components/start_default_widget.dart';
@@ -7,7 +7,6 @@ import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SearchRecordPage extends StatefulWidget {
@@ -24,7 +23,7 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FinancialRecordStore>().fetchRecords('E', DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
+      context.read<FinancialRecordStore>().fetchAllRecords();
     });
   }
 
@@ -77,7 +76,11 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
                   ),
                 ),
               ),
-              configPage()
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: configPage(),
+              ))
             ],
           ),
         ));
@@ -97,8 +100,8 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
       return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
     }
 
-    if (controller.state is SuccessFinancialRecordState && controller.state.data.financialRecords.isNotEmpty) {
-      return ListRecordsWidget(controller: controller);
+    if (controller.state is SuccessAllFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
+      return ListAllRecordsWidget(controller: controller);
     }
 
     return const StartDefaultWidget(

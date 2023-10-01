@@ -26,6 +26,25 @@ class FinancialRecordService {
     }
   }
 
+  Future<List<FinancialRecordModel>> fetchAllRecords() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    try {
+      dio.options.headers["authorization"] = "Bearer ${sharedPreferences.getString('access_token')}";
+      String? email = sharedPreferences.getString('email');
+      Map<String, dynamic> data = {"email": email};
+
+      final response = await dio.get('$basePath/financial-record/all', data: data);
+      final list = response.data as List;
+      return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
+    } catch (error) {
+      if (error.toString().contains('403')) {
+        throw Exception('[403] Não autorizado: $error');
+      }
+      throw Exception('Ocorreu um erro durante a listagem de lançamentos: $error');
+    }
+  }
+
   Future<bool> createRecord(double value, String description, String date, int month, int year, int categoryId, String type) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

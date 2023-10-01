@@ -10,6 +10,11 @@ class SuccessFinancialRecordState extends FinancialRecordState {
   SuccessFinancialRecordState(this.data);
 }
 
+class SuccessAllFinancialRecordState extends FinancialRecordState {
+  final List<FinancialRecordModel> financialRecords;
+  SuccessAllFinancialRecordState(this.financialRecords);
+}
+
 class LoadingFinancialRecordState extends FinancialRecordState {}
 
 class ErrorFinancialRecordState extends FinancialRecordState {
