@@ -1,3 +1,4 @@
+import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/shared/components/list_all_records_widget.dart';
 import 'package:flut_jestor_app/shared/components/loading_widget.dart';
@@ -66,13 +67,23 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: SearchBar(
-                    // controller: controller,
+                    controller: controller.searchController,
                     leading: const Icon(Icons.search_rounded, color: blue),
                     shape: MaterialStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
                     hintText: 'Pesquisar por descrição',
                     hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.grey)),
                     padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
-                    onChanged: (_) {},
+                    onChanged: (_) {
+                      List<FinancialRecordModel> duplicatedList = List.of(controller.state.financialRecords);
+                      List<FinancialRecordModel> searchedRecords = [];
+
+                      for (var element in controller.state.financialRecords) {
+                        if (element.description.startsWith(controller.searchController.text)) {
+                          searchedRecords.add(element);
+                          duplicatedList.remove(element);
+                        }
+                      }
+                    },
                   ),
                 ),
               ),

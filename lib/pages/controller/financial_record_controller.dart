@@ -22,6 +22,8 @@ class FinancialRecordController extends ChangeNotifier {
   TextEditingController dateEditController = TextEditingController();
   TextEditingController descriptionEditController = TextEditingController();
 
+  TextEditingController searchController = TextEditingController();
+
   late CategoryModel selectedCategory = listCategories.first;
 
   initialize(FinancialRecordStore newStore) {
