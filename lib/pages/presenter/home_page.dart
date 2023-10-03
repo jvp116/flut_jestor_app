@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FinancialRecordStore>().fetchAllRecords();
+      context.read<FinancialRecordStore>().fetchAllRecords(DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
     });
   }
 

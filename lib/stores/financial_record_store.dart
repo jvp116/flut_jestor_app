@@ -24,10 +24,10 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
     }
   }
 
-  Future fetchAllRecords() async {
+  Future fetchAllRecords(String month, String year) async {
     value = LoadingFinancialRecordState();
     try {
-      final financialRecords = await service.fetchAllRecords();
+      final financialRecords = await service.fetchAllRecords(month, year);
       value = SuccessAllFinancialRecordState(financialRecords);
     } catch (e) {
       if (e.toString().contains('403')) {
