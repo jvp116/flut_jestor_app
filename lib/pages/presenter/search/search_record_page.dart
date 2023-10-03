@@ -1,39 +1,37 @@
-import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
-import 'package:flut_jestor_app/shared/components/list_all_records_widget.dart';
-import 'package:flut_jestor_app/shared/components/loading_widget.dart';
+import 'package:flut_jestor_app/pages/controller/search_record_controller.dart';
+import 'package:flut_jestor_app/pages/presenter/search/search_list_record_page.dart';
 import 'package:flut_jestor_app/shared/components/screen_forbidden_widget.dart';
-import 'package:flut_jestor_app/shared/components/start_default_widget.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
-import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SearchRecordPage extends StatefulWidget {
-  const SearchRecordPage({super.key});
+  final FinancialRecordController controller;
+
+  const SearchRecordPage({super.key, required this.controller});
 
   @override
   State<SearchRecordPage> createState() => _SearchRecordPageState();
 }
 
 class _SearchRecordPageState extends State<SearchRecordPage> {
-  final FinancialRecordController controller = FinancialRecordController();
+  final SearchRecordController controller = SearchRecordController();
+  var list = SearchListRecordPage(
+    records: const [],
+    controller: FinancialRecordController(),
+  );
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FinancialRecordStore>().fetchAllRecords();
-    });
+    list = SearchListRecordPage(records: widget.controller.state.financialRecords, controller: widget.controller);
   }
 
   @override
   Widget build(BuildContext context) {
-    controller.initialize(context.watch<FinancialRecordStore>());
-
     return AnimatedBuilder(
-      animation: controller,
+      animation: widget.controller,
       builder: (context, child) {
         return verifyPage();
       },
@@ -41,7 +39,7 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
   }
 
   Widget verifyPage() {
-    if (controller.state is UnauthorizedFinancialRecordState) {
+    if (widget.controller.state is UnauthorizedFinancialRecordState) {
       return const ScreenForbiddenWidget(
           title: 'Ops! Parece que sua sessão expirou.',
           subtitle: 'Não se preocupe. Para continuar utilizando o app, por favor, faça login novamente.');
@@ -74,15 +72,11 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
                     hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.grey)),
                     padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
                     onChanged: (_) {
-                      List<FinancialRecordModel> duplicatedList = List.of(controller.state.financialRecords);
-                      List<FinancialRecordModel> searchedRecords = [];
-
-                      for (var element in controller.state.financialRecords) {
-                        if (element.description.startsWith(controller.searchController.text)) {
-                          searchedRecords.add(element);
-                          duplicatedList.remove(element);
-                        }
-                      }
+                      setState(() {
+                        list = SearchListRecordPage(
+                            records: controller.filterByDescription(widget.controller.state.financialRecords, controller.searchController.text),
+                            controller: widget.controller);
+                      });
                     },
                   ),
                 ),
@@ -90,32 +84,10 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: configPage(),
+                child: list,
               ))
             ],
           ),
         ));
-  }
-
-  Widget configPage() {
-    if (controller.state is LoadingFinancialRecordState) {
-      return const LoadingWidget();
-    }
-
-    if (controller.state is InitialFinancialRecordState) {
-      return const StartDefaultWidget(
-          iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui lançamentos cadastrados esse mês.');
-    }
-
-    if (controller.state is ErrorFinancialRecordState) {
-      return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
-    }
-
-    if (controller.state is SuccessAllFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
-      return ListAllRecordsWidget(controller: controller);
-    }
-
-    return const StartDefaultWidget(
-        iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui lançamentos cadastrados esse mês.');
   }
 }

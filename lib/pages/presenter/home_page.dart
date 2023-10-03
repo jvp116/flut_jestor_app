@@ -2,7 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/pages/controller/home_controller.dart';
 import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
-import 'package:flut_jestor_app/pages/presenter/search_record_page.dart';
+import 'package:flut_jestor_app/pages/presenter/search/search_record_page.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
@@ -41,6 +41,14 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FinancialRecordStore>().fetchAllRecords();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     financialRecordController.initialize(context.watch<FinancialRecordStore>());
 
@@ -57,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SearchRecordPage()),
+                MaterialPageRoute(builder: (context) => SearchRecordPage(controller: financialRecordController)),
               );
             },
             icon: const Icon(Icons.search_outlined, color: Colors.white),

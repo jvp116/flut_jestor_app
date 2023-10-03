@@ -1,29 +1,31 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class ListAllRecordsWidget extends StatefulWidget {
+class SearchListRecordPage extends StatefulWidget {
+  final List<FinancialRecordModel> records;
   final FinancialRecordController controller;
 
-  const ListAllRecordsWidget({Key? key, required this.controller}) : super(key: key);
+  const SearchListRecordPage({Key? key, required this.controller, required this.records}) : super(key: key);
 
   @override
-  State<ListAllRecordsWidget> createState() => _ListAllRecordsWidgetState();
+  State<SearchListRecordPage> createState() => _SearchListRecordPageState();
 }
 
-class _ListAllRecordsWidgetState extends State<ListAllRecordsWidget> {
+class _SearchListRecordPageState extends State<SearchListRecordPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: widget.controller.state.financialRecords.length,
+          itemCount: widget.records.length,
           itemBuilder: (context, index) {
-            final financialRecord = widget.controller.state.financialRecords[index];
+            final financialRecord = widget.records[index];
 
             return ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
@@ -156,8 +158,6 @@ class _ListAllRecordsWidgetState extends State<ListAllRecordsWidget> {
                                                                       fontWeight: FontWeight.w500,
                                                                       fontSize: 12)),
                                                               TextFormField(
-                                                                  controller:
-                                                                      widget.controller.getCategoryForEdit(financialRecord.category.description),
                                                                   enabled: false,
                                                                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                                               const SizedBox(height: 16),
