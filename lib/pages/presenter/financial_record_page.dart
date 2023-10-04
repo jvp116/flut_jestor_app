@@ -48,12 +48,11 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
-          ),
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
         ),
         backgroundColor: blue,
         elevation: 0,

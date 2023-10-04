@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 
 class SearchRecordController {
   final TextEditingController searchController = TextEditingController();
+  List<FinancialRecordModel> listRecords = [];
 
   List<FinancialRecordModel> filterByDescription(List<FinancialRecordModel> records, String description) {
-    var recordsFiltered = List<FinancialRecordModel>.of(records);
-    recordsFiltered.retainWhere((record) => record.description.startsWith(description));
+    listRecords = List<FinancialRecordModel>.of(records);
+    listRecords.retainWhere((record) => record.description.startsWith(description));
 
     if (description.isEmpty) {
       return records;
     }
 
-    if (recordsFiltered.isEmpty) {
+    if (listRecords.isEmpty) {
       List<FinancialRecordModel> listEmpty = List.empty();
       return listEmpty;
     }
-    return recordsFiltered;
+    return listRecords;
   }
 }

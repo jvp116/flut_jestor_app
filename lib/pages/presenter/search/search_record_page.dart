@@ -18,15 +18,16 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
   final SearchRecordController controller = SearchRecordController();
 
   var searchListPage = SearchListRecordPage(
-    records: const [],
-    controller: FinancialRecordController(),
+    controller: SearchRecordController(),
+    financialRecordController: FinancialRecordController(),
   );
 
   @override
   void initState() {
     super.initState();
     widget.controller.state.financialRecords.sort((FinancialRecordModel a, FinancialRecordModel b) => b.date.compareTo(a.date));
-    searchListPage = SearchListRecordPage(records: widget.controller.state.financialRecords, controller: widget.controller);
+    controller.filterByDescription(widget.controller.state.financialRecords, controller.searchController.text);
+    searchListPage = SearchListRecordPage(controller: controller, financialRecordController: widget.controller);
   }
 
   @override
@@ -62,9 +63,8 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
                         padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
                         onChanged: (_) {
                           setState(() {
-                            searchListPage = SearchListRecordPage(
-                                records: controller.filterByDescription(widget.controller.state.financialRecords, controller.searchController.text),
-                                controller: widget.controller);
+                            controller.filterByDescription(widget.controller.state.financialRecords, controller.searchController.text);
+                            searchListPage = SearchListRecordPage(controller: controller, financialRecordController: widget.controller);
                           });
                         },
                       ),

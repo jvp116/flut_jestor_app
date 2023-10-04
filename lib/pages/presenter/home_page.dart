@@ -79,12 +79,22 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       key: controller.scaffoldKey,
-      endDrawer: DrawerWidget(controller: controller, email: widget.email),
+      drawer: DrawerWidget(controller: controller, email: widget.email),
       appBar: AppBar(
         title: const Text('Jestor',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates')),
         backgroundColor: blue,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            controller.scaffoldKey.currentState?.openDrawer();
+          },
+          icon: const Icon(
+            Icons.account_circle_outlined,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -94,16 +104,6 @@ class _HomePageState extends State<HomePage> {
               );
             },
             icon: const Icon(Icons.search_outlined, color: Colors.white),
-          ),
-          IconButton(
-            onPressed: () {
-              controller.scaffoldKey.currentState?.openEndDrawer();
-            },
-            icon: const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 28,
-            ),
           ),
         ],
       ),

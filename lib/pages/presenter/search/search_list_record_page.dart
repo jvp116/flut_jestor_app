@@ -1,16 +1,16 @@
 import 'package:brasil_fields/brasil_fields.dart';
-import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
+import 'package:flut_jestor_app/pages/controller/search_record_controller.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class SearchListRecordPage extends StatefulWidget {
-  final List<FinancialRecordModel> records;
-  final FinancialRecordController controller;
+  final FinancialRecordController financialRecordController;
+  final SearchRecordController controller;
 
-  const SearchListRecordPage({Key? key, required this.controller, required this.records}) : super(key: key);
+  const SearchListRecordPage({Key? key, required this.controller, required this.financialRecordController}) : super(key: key);
 
   @override
   State<SearchListRecordPage> createState() => _SearchListRecordPageState();
@@ -23,9 +23,9 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
       child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: widget.records.length,
+          itemCount: widget.controller.listRecords.length,
           itemBuilder: (context, index) {
-            final financialRecord = widget.records[index];
+            final financialRecord = widget.controller.listRecords[index];
 
             return ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
@@ -40,7 +40,7 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                   UtilBrasilFields.obterReal(financialRecord.value),
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: blue),
                 ),
-                trailing: Text(widget.controller.getDate(DateTime.parse(financialRecord.date)),
+                trailing: Text(widget.financialRecordController.getDate(DateTime.parse(financialRecord.date)),
                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: blue)),
                 onTap: () {
                   showModalBottomSheet(
@@ -148,7 +148,7 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                       Padding(
                                                         padding: const EdgeInsets.all(16.0),
                                                         child: Form(
-                                                          key: widget.controller.formKeyEditFinancialRecord,
+                                                          key: widget.financialRecordController.formKeyEditFinancialRecord,
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
@@ -158,8 +158,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                       fontWeight: FontWeight.w500,
                                                                       fontSize: 12)),
                                                               TextFormField(
-                                                                  controller:
-                                                                      widget.controller.getCategoryForEdit(financialRecord.category.description),
+                                                                  controller: widget.financialRecordController
+                                                                      .getCategoryForEdit(financialRecord.category.description),
                                                                   enabled: false,
                                                                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                                               const SizedBox(height: 16),
@@ -175,7 +175,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontSize: 12)),
                                                                         TextFormField(
-                                                                          controller: widget.controller.getValueForEdit(financialRecord.value),
+                                                                          controller:
+                                                                              widget.financialRecordController.getValueForEdit(financialRecord.value),
                                                                           inputFormatters: [
                                                                             FilteringTextInputFormatter.digitsOnly,
                                                                             RealInputFormatter(moeda: true)
@@ -212,7 +213,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontSize: 12)),
                                                                         TextField(
-                                                                          controller: widget.controller.getDateForEdit(financialRecord.date),
+                                                                          controller:
+                                                                              widget.financialRecordController.getDateForEdit(financialRecord.date),
                                                                           decoration: const InputDecoration(
                                                                             suffixIcon: Icon(Icons.edit_calendar_outlined, color: blue, size: 24),
                                                                             border: UnderlineInputBorder(),
@@ -250,7 +252,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                             if (pickedDate != null) {
                                                                               String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
                                                                               setState(() {
-                                                                                widget.controller.dateEditController.text = formattedDate;
+                                                                                widget.financialRecordController.dateEditController.text =
+                                                                                    formattedDate;
                                                                               });
                                                                             }
                                                                           },
@@ -267,7 +270,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                       fontWeight: FontWeight.w500,
                                                                       fontSize: 12)),
                                                               TextFormField(
-                                                                controller: widget.controller.getDescriptionForEdit(financialRecord.description),
+                                                                controller: widget.financialRecordController
+                                                                    .getDescriptionForEdit(financialRecord.description),
                                                                 decoration: const InputDecoration(
                                                                   border: UnderlineInputBorder(),
                                                                   enabledBorder: UnderlineInputBorder(
@@ -296,8 +300,9 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                           onPressed: () {
                                                             Navigator.pop(context);
                                                             Navigator.pop(context);
-                                                            if (widget.controller.formKeyEditFinancialRecord.currentState!.validate()) {
-                                                              widget.controller.editRecord(financialRecord).then((value) {
+                                                            if (widget.financialRecordController.formKeyEditFinancialRecord.currentState!
+                                                                .validate()) {
+                                                              widget.financialRecordController.editRecord(financialRecord).then((value) {
                                                                 ScaffoldMessenger.of(context)
                                                                     .showSnackBar(Utils().snackBarSuccess('Lançamento editado com sucesso!'));
                                                               }).onError((error, stackTrace) {
@@ -371,7 +376,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                   onPressed: () async {
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
-                                                    widget.controller.deleteRecord(financialRecord).then((value) {
+                                                    widget.financialRecordController.deleteRecord(financialRecord).then((value) {
+                                                      widget.controller.listRecords.remove(financialRecord);
                                                       ScaffoldMessenger.of(context)
                                                           .showSnackBar(Utils().snackBarSuccess("Lançamento excluído com sucesso"));
                                                     }).onError((error, stackTrace) {
