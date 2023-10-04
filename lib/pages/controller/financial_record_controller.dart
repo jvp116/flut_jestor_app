@@ -11,6 +11,9 @@ class FinancialRecordController extends ChangeNotifier {
   late FinancialRecordStore? store;
   var state;
 
+  double totalMes = 0;
+  List<FinancialRecordModel> list = [];
+
   final formKeyNewFinancialRecord = GlobalKey<FormState>();
   var valueController = MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
   final TextEditingController dateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
@@ -30,6 +33,20 @@ class FinancialRecordController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void fetchRecords(String type) {
+    list = state.financialRecords.where((record) => record.category.type == type).toList();
+  }
+
+  double getTotalMes(List<FinancialRecordModel> financialRecords, String type) {
+    double totalMes = 0;
+    for (var record in financialRecords) {
+      if (record.category.type.contains(type)) {
+        totalMes += record.value;
+      }
+    }
+    return totalMes;
+  }
+
   Future<void> createRecord() async {
     double value = UtilBrasilFields.converterMoedaParaDouble(valueController.text);
     String description = descriptionController.text;
@@ -40,7 +57,7 @@ class FinancialRecordController extends ChangeNotifier {
     int categoryId = selectedCategory.id;
     String type = selectedCategory.type;
 
-    await store!.createRecord(value, description, date, month, year, categoryId, type);
+    bool isCreated = await store!.createRecord(value, description, date, month, year, categoryId, type);
     notifyListeners();
   }
 
@@ -55,9 +72,17 @@ class FinancialRecordController extends ChangeNotifier {
     bool isEdited = await store!.editRecord(financialRecord.id, value, description, date, month, year, type);
 
     if (isEdited) {
-      changeTotalMes(dateIsDifferent(financialRecord.date, date), value, financialRecord);
-      changeListRecords(
-          dateIsDifferent(financialRecord.date, date), value, financialRecord, formatDate(date), description, categoryEditController.text);
+      if (dateIsDifferent(financialRecord.date, date)) {
+        totalMes -= financialRecord.value;
+        state.financialRecords.removeAt(recoverIndex(financialRecord.id));
+      } else {
+        totalMes += (value - financialRecord.value);
+        state.financialRecords
+            .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
+        state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
+      }
+      // changeListRecords(
+      //     dateIsDifferent(financialRecord.date, date), value, financialRecord, formatDate(date), description, categoryEditController.text);
     }
     notifyListeners();
   }
@@ -65,21 +90,15 @@ class FinancialRecordController extends ChangeNotifier {
   void changeListRecords(
       bool monthIsDifferent, double value, FinancialRecordModel financialRecord, String date, String description, String categoryDescription) {
     if (monthIsDifferent) {
-      state.data.financialRecords.removeAt(recoverIndex(financialRecord.id));
     } else {
-      state.data.financialRecords
+      state.financialRecords
           .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
-      state.data.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
+      state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
     }
   }
 
-  void changeTotalMes(bool monthIsDifferent, double value, FinancialRecordModel financialRecord) {
-    if (monthIsDifferent) {
-      state.data.totalMes -= financialRecord.value;
-    } else {
-      state.data.totalMes = state.data.totalMes + (value - financialRecord.value);
-    }
-  }
+  void changeTotalMes(
+      bool monthIsDifferent, double value, FinancialRecordModel financialRecord, String date, String description, String categoryDescription) {}
 
   bool dateIsDifferent(String oldDate, String newDate) {
     String oldMonth = oldDate.split('-')[1];
@@ -119,8 +138,8 @@ class FinancialRecordController extends ChangeNotifier {
     bool isDeleted = await store!.deleteRecord(financialRecord.id, financialRecord.category.type, month, year);
 
     if (isDeleted) {
-      state.data.totalMes -= financialRecord.value;
-      state.data.financialRecords.remove(financialRecord);
+      totalMes -= financialRecord.value;
+      state.financialRecords.remove(financialRecord);
     }
     notifyListeners();
   }

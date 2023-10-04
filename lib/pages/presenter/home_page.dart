@@ -6,6 +6,8 @@ import 'package:flut_jestor_app/pages/presenter/search/search_record_page.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
+import 'package:flut_jestor_app/shared/components/screen_forbidden_widget.dart';
+import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final HomeController controller = HomeController();
   final FinancialRecordController financialRecordController = FinancialRecordController();
+  String totalMes = '';
 
   final List<ChartData> chartData = [
     ChartData('Alimentação', 2510, red),
@@ -46,11 +49,31 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FinancialRecordStore>().fetchAllRecords(DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
     });
+    totalMes = '';
   }
 
   @override
   Widget build(BuildContext context) {
     financialRecordController.initialize(context.watch<FinancialRecordStore>());
+
+    return AnimatedBuilder(
+      animation: financialRecordController,
+      builder: (context, child) {
+        return verifyPage();
+      },
+    );
+  }
+
+  Widget verifyPage() {
+    if (financialRecordController.state is UnauthorizedFinancialRecordState) {
+      return const ScreenForbiddenWidget(
+          title: 'Ops! Parece que sua sessão expirou.',
+          subtitle: 'Não se preocupe. Para continuar utilizando o app, por favor, faça login novamente.');
+    }
+
+    totalMes = financialRecordController.state is SuccessFinancialRecordState
+        ? controller.getTotalMes(financialRecordController.state.financialRecords)
+        : 'R\$ 0,00';
 
     return Scaffold(
       key: controller.scaffoldKey,
@@ -100,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           children: [
                             Text(
-                              controller.isPressed ? 'R\$ 1809,12' : '',
+                              controller.isPressed ? totalMes : '',
                               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                             SizedBox(
@@ -135,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                                     MaterialPageRoute(
                                         builder: (context) => const FinancialRecordPage(
                                               title: 'Entradas',
-                                              type: 'E',
+                                              type: 'ENTRADA',
                                             )),
                                   );
                                 },
@@ -171,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                                     MaterialPageRoute(
                                       builder: (context) => const FinancialRecordPage(
                                         title: 'Saídas',
-                                        type: 'S',
+                                        type: 'SAIDA',
                                       ),
                                     ),
                                   );

@@ -6,13 +6,8 @@ abstract class FinancialRecordState {}
 class InitialFinancialRecordState extends FinancialRecordState {}
 
 class SuccessFinancialRecordState extends FinancialRecordState {
-  final ListFinancialRecordModel data;
-  SuccessFinancialRecordState(this.data);
-}
-
-class SuccessAllFinancialRecordState extends FinancialRecordState {
   final List<FinancialRecordModel> financialRecords;
-  SuccessAllFinancialRecordState(this.financialRecords);
+  SuccessFinancialRecordState(this.financialRecords);
 }
 
 class LoadingFinancialRecordState extends FinancialRecordState {}

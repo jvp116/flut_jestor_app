@@ -8,7 +8,7 @@ class FinancialRecordService {
 
   FinancialRecordService(this.dio);
 
-  Future<ListFinancialRecordModel> fetchRecords(String type, String month, String year) async {
+  Future<List<FinancialRecordModel>> fetchRecords(String type, String month, String year) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     try {
@@ -17,7 +17,8 @@ class FinancialRecordService {
       Map<String, dynamic> data = {"email": email, "type": type, "month": month, "year": year};
 
       final response = await dio.get('$basePath/financial-record', data: data);
-      return ListFinancialRecordModel.fromMap(response.data);
+      final list = response.data as List;
+      return list.map((e) => FinancialRecordModel.fromMap(e)).toList();
     } catch (error) {
       if (error.toString().contains('403')) {
         throw Exception('[403] Não autorizado: $error');

@@ -26,9 +26,6 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FinancialRecordStore>().fetchRecords(widget.type, DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
-    });
   }
 
   @override
@@ -98,8 +95,8 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
       return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
     }
 
-    if (controller.state is SuccessFinancialRecordState && controller.state.data.financialRecords.isNotEmpty) {
-      return ListFinancialRecordPage(controller: controller);
+    if (controller.state is SuccessFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
+      return ListFinancialRecordPage(controller: controller, type: widget.type);
     }
 
     return const StartDefaultWidget(

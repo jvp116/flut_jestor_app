@@ -1,4 +1,3 @@
-import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/services/financial_record_service.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flutter/material.dart';
@@ -8,27 +7,11 @@ class FinancialRecordStore extends ValueNotifier<FinancialRecordState> {
 
   FinancialRecordStore(this.service) : super(InitialFinancialRecordState());
 
-  Future fetchRecords(String type, String month, String year) async {
-    value = LoadingFinancialRecordState();
-    ListFinancialRecordModel? data;
-    try {
-      data = await service.fetchRecords(type, month, year);
-
-      value = SuccessFinancialRecordState(data);
-    } catch (e) {
-      if (e.toString().contains('403')) {
-        value = UnauthorizedFinancialRecordState();
-      } else {
-        value = ErrorFinancialRecordState(e.toString());
-      }
-    }
-  }
-
   Future fetchAllRecords(String month, String year) async {
     value = LoadingFinancialRecordState();
     try {
       final financialRecords = await service.fetchAllRecords(month, year);
-      value = SuccessAllFinancialRecordState(financialRecords);
+      value = SuccessFinancialRecordState(financialRecords);
     } catch (e) {
       if (e.toString().contains('403')) {
         value = UnauthorizedFinancialRecordState();

@@ -38,20 +38,3 @@ class FinancialRecordModel {
     };
   }
 }
-
-class ListFinancialRecordModel {
-  double totalMes;
-  List<dynamic> financialRecords;
-
-  ListFinancialRecordModel({
-    required this.totalMes,
-    required this.financialRecords,
-  });
-
-  static ListFinancialRecordModel fromMap(Map<dynamic, dynamic> map) {
-    return ListFinancialRecordModel(
-      totalMes: map['totalMes'] ?? 0,
-      financialRecords: map['financialRecords'].map((e) => FinancialRecordModel.fromMap(e)).toList(),
-    );
-  }
-}

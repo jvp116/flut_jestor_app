@@ -17,6 +17,9 @@ class SearchRecordPage extends StatefulWidget {
 
 class _SearchRecordPageState extends State<SearchRecordPage> {
   final SearchRecordController controller = SearchRecordController();
+
+  var page;
+
   var list = SearchListRecordPage(
     records: const [],
     controller: FinancialRecordController(),
@@ -25,7 +28,15 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
   @override
   void initState() {
     super.initState();
-    list = SearchListRecordPage(records: widget.controller.state.financialRecords, controller: widget.controller);
+
+    if (widget.controller.state is UnauthorizedFinancialRecordState) {
+      page = const ScreenForbiddenWidget(
+          title: 'Ops! Parece que sua sessão expirou.',
+          subtitle: 'Não se preocupe. Para continuar utilizando o app, por favor, faça login novamente.');
+    } else {
+      list = SearchListRecordPage(records: widget.controller.state.financialRecords, controller: widget.controller);
+      page = getPage();
+    }
   }
 
   @override
@@ -33,18 +44,12 @@ class _SearchRecordPageState extends State<SearchRecordPage> {
     return AnimatedBuilder(
       animation: widget.controller,
       builder: (context, child) {
-        return verifyPage();
+        return page;
       },
     );
   }
 
-  Widget verifyPage() {
-    if (widget.controller.state is UnauthorizedFinancialRecordState) {
-      return const ScreenForbiddenWidget(
-          title: 'Ops! Parece que sua sessão expirou.',
-          subtitle: 'Não se preocupe. Para continuar utilizando o app, por favor, faça login novamente.');
-    }
-
+  Widget getPage() {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
