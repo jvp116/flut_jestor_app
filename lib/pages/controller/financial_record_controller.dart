@@ -34,17 +34,26 @@ class FinancialRecordController extends ChangeNotifier {
   }
 
   void fetchRecords(String type) {
-    list = state.financialRecords.where((record) => record.category.type == type).toList();
+    list = state.financialRecords.where((record) {
+      switch (record.category.type) {
+        case 'E':
+          record.category.type = 'ENTRADA';
+          break;
+        case 'S':
+          record.category.type = 'SAIDA';
+          break;
+        default:
+      }
+      return record.category.type == type;
+    }).toList();
   }
 
-  double getTotalMes(List<FinancialRecordModel> financialRecords, String type) {
-    double totalMes = 0;
+  void setTotalMes(List<FinancialRecordModel> financialRecords, String type) {
     for (var record in financialRecords) {
       if (record.category.type.contains(type)) {
         totalMes += record.value;
       }
     }
-    return totalMes;
   }
 
   Future<void> createRecord() async {
@@ -74,31 +83,17 @@ class FinancialRecordController extends ChangeNotifier {
     if (isEdited) {
       if (dateIsDifferent(financialRecord.date, date)) {
         totalMes -= financialRecord.value;
+        list.remove(financialRecord);
         state.financialRecords.removeAt(recoverIndex(financialRecord.id));
       } else {
         totalMes += (value - financialRecord.value);
-        state.financialRecords
-            .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
-        state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
+        // state.financialRecords
+        //     .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
+        // state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
       }
-      // changeListRecords(
-      //     dateIsDifferent(financialRecord.date, date), value, financialRecord, formatDate(date), description, categoryEditController.text);
     }
     notifyListeners();
   }
-
-  void changeListRecords(
-      bool monthIsDifferent, double value, FinancialRecordModel financialRecord, String date, String description, String categoryDescription) {
-    if (monthIsDifferent) {
-    } else {
-      state.financialRecords
-          .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
-      state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
-    }
-  }
-
-  void changeTotalMes(
-      bool monthIsDifferent, double value, FinancialRecordModel financialRecord, String date, String description, String categoryDescription) {}
 
   bool dateIsDifferent(String oldDate, String newDate) {
     String oldMonth = oldDate.split('-')[1];
@@ -111,9 +106,9 @@ class FinancialRecordController extends ChangeNotifier {
   }
 
   int recoverIndex(int id) {
-    for (var obj in state.data.financialRecords) {
+    for (var obj in state.financialRecords) {
       if (obj.id == id) {
-        return state.data.financialRecords.indexOf(obj);
+        return state.financialRecords.indexOf(obj);
       }
     }
     return 0;
@@ -139,7 +134,8 @@ class FinancialRecordController extends ChangeNotifier {
 
     if (isDeleted) {
       totalMes -= financialRecord.value;
-      state.financialRecords.remove(financialRecord);
+      list.remove(financialRecord);
+      state.financialRecords.removeAt(recoverIndex(financialRecord.id));
     }
     notifyListeners();
   }

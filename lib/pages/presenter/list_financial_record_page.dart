@@ -22,12 +22,11 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
   void initState() {
     super.initState();
     widget.controller.fetchRecords(widget.type);
+    widget.controller.setTotalMes(widget.controller.state.financialRecords, widget.type);
   }
 
   @override
   Widget build(BuildContext context) {
-    // widget.controller.totalMes = widget.controller.getTotalMes(widget.controller.state.financialRecords, widget.type);
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -61,10 +60,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                             animation: widget.controller,
                             builder: (context, child) {
                               return Text(
-                                _isPressed
-                                    ? UtilBrasilFields.obterReal(widget.controller.getTotalMes(widget.controller.state.financialRecords, widget.type),
-                                        moeda: false)
-                                    : '',
+                                _isPressed ? UtilBrasilFields.obterReal(widget.controller.totalMes, moeda: false) : '',
                                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
                               );
                             },
@@ -130,7 +126,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
                           ),
                         ),
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (context) {
                           return SizedBox(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,

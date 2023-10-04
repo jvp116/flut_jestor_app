@@ -95,11 +95,13 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
       return const StartDefaultWidget(iconData: Icons.report_problem_rounded, title: 'Algo deu errado :(', subtitle: 'tente novamente mais tarde');
     }
 
-    if (controller.state is SuccessFinancialRecordState && controller.state.financialRecords.isNotEmpty) {
+    if (controller.state is SuccessFinancialRecordState &&
+        controller.state.financialRecords.isNotEmpty &&
+        (controller.state.financialRecords.where((record) => record.category.type == widget.type).length > 0)) {
       return ListFinancialRecordPage(controller: controller, type: widget.type);
     }
 
-    return const StartDefaultWidget(
-        iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui lançamentos cadastrados esse mês.');
+    return StartDefaultWidget(
+        iconData: Icons.currency_exchange_rounded, title: 'Hummm...', subtitle: 'Você não possui ${widget.title} cadastradas nesse mês.');
   }
 }
