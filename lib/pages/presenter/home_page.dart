@@ -49,7 +49,9 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FinancialRecordStore>().fetchAllRecords(DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
     });
-    totalMes = '';
+    totalMes = financialRecordController.state is SuccessFinancialRecordState
+        ? controller.getTotalMes(financialRecordController.state.financialRecords)
+        : 'R\$ 0,00';
   }
 
   @override
@@ -412,6 +414,10 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () {
                                 if (financialRecordController.formKeyNewFinancialRecord.currentState!.validate()) {
                                   financialRecordController.createRecord().then((value) {
+                                    context
+                                        .read<FinancialRecordStore>()
+                                        .fetchAllRecords(DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
+
                                     ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarSuccess('Lançamento cadastrado com sucesso!'));
                                   });
                                   Navigator.pop(context);

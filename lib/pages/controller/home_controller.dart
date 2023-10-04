@@ -31,6 +31,16 @@ class HomeController extends ChangeNotifier {
     double totalMes = 0;
 
     for (var record in financialRecords) {
+      switch (record.category.type) {
+        case 'E':
+          record.category.type = 'ENTRADA';
+          break;
+        case 'S':
+          record.category.type = 'SAIDA';
+          break;
+        default:
+      }
+
       if (record.category.type.contains('ENTRADA')) {
         totalMes += record.value;
       } else {
