@@ -32,10 +32,10 @@ class HomeController extends ChangeNotifier {
 
     for (var record in financialRecords) {
       switch (record.category.type) {
-        case 'E':
+        case "E":
           record.category.type = 'ENTRADA';
           break;
-        case 'S':
+        case "S":
           record.category.type = 'SAIDA';
           break;
         default:

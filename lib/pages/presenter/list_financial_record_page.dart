@@ -1,4 +1,5 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _ListFinancialRecordPageState extends State<ListFinancialRecordPage> {
   @override
   void initState() {
     super.initState();
+    widget.controller.state.financialRecords.sort((FinancialRecordModel a, FinancialRecordModel b) => b.date.compareTo(a.date));
     widget.controller.fetchRecords(widget.type);
     widget.controller.setTotalMes(widget.controller.state.financialRecords, widget.type);
   }
