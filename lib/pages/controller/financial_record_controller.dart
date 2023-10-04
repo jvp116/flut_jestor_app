@@ -67,6 +67,8 @@ class FinancialRecordController extends ChangeNotifier {
     String type = selectedCategory.type;
 
     bool isCreated = await store!.createRecord(value, description, date, month, year, categoryId, type);
+    if (isCreated) {}
+
     notifyListeners();
   }
 
@@ -87,9 +89,12 @@ class FinancialRecordController extends ChangeNotifier {
         state.financialRecords.removeAt(recoverIndex(financialRecord.id));
       } else {
         totalMes += (value - financialRecord.value);
-        // state.financialRecords
-        //     .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
-        // state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
+        list.insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
+        list.removeAt(recoverIndex(financialRecord.id) + 1);
+
+        state.financialRecords
+            .insert(recoverIndex(financialRecord.id), getEditedRecord(financialRecord, value, date, description, categoryEditController.text));
+        state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
       }
     }
     notifyListeners();
@@ -123,7 +128,7 @@ class FinancialRecordController extends ChangeNotifier {
       }
     }
 
-    return FinancialRecordModel(id: oldFinancialRecord.id, value: value, date: date, description: description, category: categoryModel);
+    return FinancialRecordModel(id: oldFinancialRecord.id, value: value, date: formatDate(date), description: description, category: categoryModel);
   }
 
   Future<void> deleteRecord(FinancialRecordModel financialRecord) async {
