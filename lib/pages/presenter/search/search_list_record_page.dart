@@ -158,6 +158,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                       fontWeight: FontWeight.w500,
                                                                       fontSize: 12)),
                                                               TextFormField(
+                                                                  controller:
+                                                                      widget.controller.getCategoryForEdit(financialRecord.category.description),
                                                                   enabled: false,
                                                                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue)),
                                                               const SizedBox(height: 16),

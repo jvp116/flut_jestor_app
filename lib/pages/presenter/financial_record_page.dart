@@ -7,7 +7,6 @@ import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class FinancialRecordPage extends StatefulWidget {
@@ -58,23 +57,6 @@ class _FinancialRecordPageState extends State<FinancialRecordPage> {
         ),
         backgroundColor: blue,
         elevation: 0,
-        actions: [
-          Center(
-            child: Text(
-              DateFormat("MMM", "pt_BR").format(DateTime.now()),
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-        ],
       ),
       backgroundColor: Colors.white,
       body: configPage(),
