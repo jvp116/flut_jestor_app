@@ -1,4 +1,5 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flut_jestor_app/models/financial_record_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/pages/controller/search_record_controller.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
@@ -298,10 +299,31 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                         padding: const EdgeInsets.all(24),
                                                         child: ElevatedButton(
                                                           onPressed: () {
-                                                            Navigator.pop(context);
-                                                            Navigator.pop(context);
                                                             if (widget.financialRecordController.formKeyEditFinancialRecord.currentState!
                                                                 .validate()) {
+                                                              setState(() {
+                                                                if (widget.financialRecordController.dateIsDifferent(
+                                                                    financialRecord.date, widget.financialRecordController.dateEditController.text)) {
+                                                                  widget.controller.listRecords.remove(financialRecord);
+                                                                } else {
+                                                                  widget.controller.listRecords.insert(
+                                                                      widget.financialRecordController.recoverIndex(financialRecord.id),
+                                                                      widget.financialRecordController.getEditedRecord(
+                                                                          financialRecord,
+                                                                          UtilBrasilFields.converterMoedaParaDouble(
+                                                                              widget.financialRecordController.valueEditController.text),
+                                                                          widget.financialRecordController.dateEditController.text,
+                                                                          widget.financialRecordController.descriptionEditController.text,
+                                                                          widget.financialRecordController.categoryEditController.text));
+
+                                                                  widget.controller.listRecords.removeAt(
+                                                                      widget.financialRecordController.recoverIndex(financialRecord.id) + 1);
+
+                                                                  widget.controller.listRecords.sort(
+                                                                      (FinancialRecordModel a, FinancialRecordModel b) => b.date.compareTo(a.date));
+                                                                }
+                                                              });
+
                                                               widget.financialRecordController.editRecord(financialRecord).then((value) {
                                                                 ScaffoldMessenger.of(context)
                                                                     .showSnackBar(Utils().snackBarSuccess('Lançamento editado com sucesso!'));
@@ -310,6 +332,8 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                                     Utils().snackBarError("Ops, não foi possível editar os dados tente mais tarde"));
                                                               });
                                                             }
+                                                            Navigator.pop(context);
+                                                            Navigator.pop(context);
                                                           },
                                                           style: ElevatedButton.styleFrom(
                                                             minimumSize: const Size.fromHeight(64),
@@ -374,16 +398,18 @@ class _SearchListRecordPageState extends State<SearchListRecordPage> {
                                                 ),
                                                 TextButton(
                                                   onPressed: () async {
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(context);
                                                     widget.financialRecordController.deleteRecord(financialRecord).then((value) {
-                                                      widget.controller.listRecords.remove(financialRecord);
+                                                      setState(() {
+                                                        widget.controller.listRecords.remove(financialRecord);
+                                                      });
                                                       ScaffoldMessenger.of(context)
                                                           .showSnackBar(Utils().snackBarSuccess("Lançamento excluído com sucesso"));
                                                     }).onError((error, stackTrace) {
                                                       ScaffoldMessenger.of(context).showSnackBar(
                                                           Utils().snackBarError("Ops, não foi possível excluir os dados tente mais tarde"));
                                                     });
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                   },
                                                   child: const Text(
                                                     'Sim',
