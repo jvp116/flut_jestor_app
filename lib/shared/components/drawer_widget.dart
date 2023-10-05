@@ -35,16 +35,20 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         padding: EdgeInsets.zero,
         children: [
           const SizedBox(
-            height: 88,
+            height: 96,
             child: DrawerHeader(
               margin: EdgeInsets.zero,
               decoration: BoxDecoration(
                 color: blue,
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
               ),
-              child: Text(
-                'Meu Perfil',
-                textAlign: TextAlign.end,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Meu Perfil',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+                ),
               ),
             ),
           ),

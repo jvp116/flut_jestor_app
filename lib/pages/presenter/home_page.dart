@@ -2,11 +2,11 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/pages/controller/home_controller.dart';
 import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
+import 'package:flut_jestor_app/pages/presenter/login_page.dart';
 import 'package:flut_jestor_app/pages/presenter/search/search_record_page.dart';
 import 'package:flut_jestor_app/shared/components/chart_category_widget.dart';
 import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
-import 'package:flut_jestor_app/shared/components/screen_forbidden_widget.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
 import 'package:flutter/material.dart';
@@ -68,14 +68,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget verifyPage() {
     if (financialRecordController.state is UnauthorizedFinancialRecordState) {
-      return const ScreenForbiddenWidget(
-          title: 'Ops! Parece que sua sessão expirou.',
-          subtitle: 'Não se preocupe. Para continuar utilizando o app, por favor, faça login novamente.');
+      return const LoginPage();
     }
 
     totalMes = financialRecordController.state is SuccessFinancialRecordState
         ? controller.getTotalMes(financialRecordController.state.financialRecords)
-        : 'R\$ 0,00';
+        : '0,00';
 
     return Scaffold(
       key: controller.scaffoldKey,
@@ -124,6 +122,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Row(
                           children: [
+                            const Text(
+                              "R\$ ",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
                             Text(
                               controller.isPressed ? totalMes : '',
                               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),

@@ -48,6 +48,6 @@ class HomeController extends ChangeNotifier {
       }
     }
 
-    return UtilBrasilFields.obterReal(totalMes);
+    return UtilBrasilFields.obterReal(totalMes, moeda: false);
   }
 }
