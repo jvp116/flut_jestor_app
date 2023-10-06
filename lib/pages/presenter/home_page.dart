@@ -1,4 +1,5 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flut_jestor_app/models/chart_data_model.dart';
 import 'package:flut_jestor_app/pages/controller/financial_record_controller.dart';
 import 'package:flut_jestor_app/pages/controller/home_controller.dart';
 import 'package:flut_jestor_app/pages/presenter/financial_record_page.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/chart_data_model.dart';
 import '../../shared/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,18 +30,7 @@ class _HomePageState extends State<HomePage> {
   final HomeController controller = HomeController();
   final FinancialRecordController financialRecordController = FinancialRecordController();
   String totalMes = '';
-
-  final List<ChartData> chartData = [
-    ChartData('Alimentação', 2510, red),
-    ChartData('Compras', 3114, purple),
-    ChartData('Educação', 9000, purpleLight),
-    ChartData('Lazer', 9000, yellow),
-    ChartData('Moradia', 9000, yellowAccent),
-    ChartData('Pet', 5002.56, brown),
-    ChartData('Saúde', 3098, green),
-    ChartData('Transporte', 1400, blueLight),
-    ChartData('Outras Saídas', 9000, blue),
-  ];
+  List<ChartData> chartData = [];
 
   @override
   void initState() {
@@ -49,9 +38,6 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FinancialRecordStore>().fetchAllRecords(DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
     });
-    totalMes = financialRecordController.state is SuccessFinancialRecordState
-        ? controller.getTotalMes(financialRecordController.state.financialRecords)
-        : 'R\$ 0,00';
   }
 
   @override
@@ -74,6 +60,10 @@ class _HomePageState extends State<HomePage> {
     totalMes = financialRecordController.state is SuccessFinancialRecordState
         ? controller.getTotalMes(financialRecordController.state.financialRecords)
         : '0,00';
+
+    chartData = financialRecordController.state is SuccessFinancialRecordState
+        ? controller.getChartData(financialRecordController.state.financialRecords)
+        : [];
 
     return Scaffold(
       key: controller.scaffoldKey,

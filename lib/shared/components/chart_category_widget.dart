@@ -23,8 +23,8 @@ class ChartCategoryWidget extends StatelessWidget {
             dataSource: chartData,
             dataLabelSettings: const DataLabelSettings(
               isVisible: true,
-              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
               labelPosition: ChartDataLabelPosition.outside,
+              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
               connectorLineSettings: ConnectorLineSettings(type: ConnectorType.curve),
             ),
             enableTooltip: true,
@@ -32,7 +32,7 @@ class ChartCategoryWidget extends StatelessWidget {
             xValueMapper: (ChartData data, _) => data.category,
             yValueMapper: (ChartData data, _) => data.value,
             radius: '80%',
-            innerRadius: '50%',
+            innerRadius: '60%',
           ),
         ]);
   }
