@@ -16,7 +16,7 @@ class FinancialRecordController extends ChangeNotifier {
 
   final formKeyNewFinancialRecord = GlobalKey<FormState>();
   var valueController = MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
-  final TextEditingController dateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+  TextEditingController dateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
   final TextEditingController descriptionController = TextEditingController();
 
   final formKeyEditFinancialRecord = GlobalKey<FormState>();

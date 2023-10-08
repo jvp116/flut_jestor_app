@@ -10,6 +10,7 @@ import 'package:flut_jestor_app/shared/components/drawer_widget.dart';
 import 'package:flut_jestor_app/shared/components/dropdown_category_button_widget.dart';
 import 'package:flut_jestor_app/states/financial_record_state.dart';
 import 'package:flut_jestor_app/stores/financial_record_store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   final HomeController controller = HomeController();
   final FinancialRecordController financialRecordController = FinancialRecordController();
   String totalMes = '';
+  DateTime dateTime = DateTime.now();
   List<ChartData> chartData = [];
 
   @override
@@ -67,22 +69,11 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       key: controller.scaffoldKey,
-      drawer: DrawerWidget(controller: controller, email: widget.email),
+      endDrawer: DrawerWidget(controller: controller, email: widget.email),
       appBar: AppBar(
-        title: const Text('Jestor',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates')),
+        title: const Text('Jestor', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat Alternates')),
         backgroundColor: blue,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            controller.scaffoldKey.currentState?.openDrawer();
-          },
-          icon: const Icon(
-            Icons.account_circle_outlined,
-            color: Colors.white,
-            size: 28,
-          ),
-        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -93,6 +84,15 @@ class _HomePageState extends State<HomePage> {
             },
             icon: const Icon(Icons.search_outlined, color: Colors.white),
           ),
+          IconButton(
+            onPressed: () {
+              controller.scaffoldKey.currentState?.openEndDrawer();
+            },
+            icon: const Icon(
+              Icons.account_circle_outlined,
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
       backgroundColor: Colors.white,
@@ -101,44 +101,122 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 200,
               decoration: const BoxDecoration(
                   color: blue, borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15))),
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: Column(
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "R\$ ",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "R\$ ",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                                    ),
+                                    Text(
+                                      controller.isPressed ? totalMes : '',
+                                      style:
+                                          const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
+                                    ),
+                                    SizedBox(
+                                      width: controller.isPressed ? 0 : 132,
+                                      height: controller.isPressed ? 0 : 24,
+                                      child: DecoratedBox(
+                                        decoration:
+                                            BoxDecoration(borderRadius: BorderRadius.circular(5), color: const Color.fromARGB(70, 255, 255, 255)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    IconButton(
+                                      iconSize: 28.0,
+                                      icon: Icon(controller.isPressed ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                                      color: const Color.fromARGB(128, 255, 255, 255),
+                                      tooltip: controller.isPressed ? 'Esconder saldo' : 'Mostrar saldo',
+                                      onPressed: () {
+                                        setState(() {
+                                          controller.isPressed = !controller.isPressed;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Text(
-                              controller.isPressed ? totalMes : '',
-                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Montserrat'),
-                            ),
-                            SizedBox(
-                              width: controller.isPressed ? 0 : 132,
-                              height: controller.isPressed ? 0 : 24,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: const Color.fromARGB(84, 255, 255, 255)),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              iconSize: 28.0,
-                              icon: Icon(controller.isPressed ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                              color: const Color.fromARGB(128, 255, 255, 255),
-                              tooltip: controller.isPressed ? 'Esconder saldo' : 'Mostrar saldo',
-                              onPressed: () {
-                                setState(() {
-                                  controller.isPressed = !controller.isPressed;
-                                });
-                              },
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    showCupertinoModalPopup(
+                                        barrierColor: Colors.white,
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext context) => Stack(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(56),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 250,
+                                                        child: CupertinoDatePicker(
+                                                          backgroundColor: Colors.white,
+                                                          initialDateTime: dateTime,
+                                                          onDateTimeChanged: (DateTime newTime) {
+                                                            setState(() => dateTime = newTime);
+                                                          },
+                                                          mode: CupertinoDatePickerMode.monthYear,
+                                                          minimumDate: DateTime(2001),
+                                                          maximumDate: DateTime(2099),
+                                                        ),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          context
+                                                              .read<FinancialRecordStore>()
+                                                              .fetchAllRecords(DateFormat.M().format(dateTime), DateFormat.y().format(dateTime));
+                                                          financialRecordController.dateController =
+                                                              TextEditingController(text: DateFormat('dd/MM/yyyy').format(dateTime));
+
+                                                          Navigator.pop(context);
+                                                        },
+                                                        style: ElevatedButton.styleFrom(
+                                                          minimumSize: const Size.fromHeight(56),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(10.0),
+                                                          ),
+                                                          backgroundColor: greenLight,
+                                                          textStyle: const TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        child: const Text(
+                                                          'Selecionar',
+                                                          style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ));
+                                  },
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(const Color.fromARGB(50, 255, 255, 255)),
+                                      elevation: MaterialStateProperty.all(0)),
+                                  child: Text(DateFormat("MMM y", "pt_BR").format(dateTime),
+                                      style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white)),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -226,11 +304,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 36, 16, 16),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
               child: Column(
                 children: [
                   const Text(
-                    'Despesas do mês por categoria',
+                    'Despesas do mês',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: blue, fontFamily: 'Montserrat'),
                   ),
                   const Divider(
@@ -409,7 +487,7 @@ class _HomePageState extends State<HomePage> {
                                   financialRecordController.createRecord().then((value) {
                                     context
                                         .read<FinancialRecordStore>()
-                                        .fetchAllRecords(DateFormat.M().format(DateTime.now()), DateFormat.y().format(DateTime.now()));
+                                        .fetchAllRecords(DateFormat.M().format(dateTime), DateFormat.y().format(dateTime));
 
                                     ScaffoldMessenger.of(context).showSnackBar(Utils().snackBarSuccess('Lançamento cadastrado com sucesso!'));
                                   });
@@ -432,7 +510,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ).then((value) {
                 financialRecordController.valueController.updateValue(0);
-                financialRecordController.dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+                financialRecordController.dateController.text = DateFormat('dd/MM/yyyy').format(dateTime);
                 financialRecordController.descriptionController.text = '';
               });
             },
