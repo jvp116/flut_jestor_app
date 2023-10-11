@@ -34,6 +34,15 @@ class FinancialRecordController extends ChangeNotifier {
   }
 
   void fetchRecords(String type) {
+    switch (type) {
+      case "E":
+        type = 'ENTRADA';
+        break;
+      case "S":
+        type = 'SAIDA';
+        break;
+      default:
+    }
     list = state.financialRecords.where((record) {
       switch (record.category.type) {
         case "E":
@@ -43,6 +52,7 @@ class FinancialRecordController extends ChangeNotifier {
           record.category.type = 'SAIDA';
           break;
         default:
+          break;
       }
       return record.category.type == type;
     }).toList();
@@ -94,8 +104,8 @@ class FinancialRecordController extends ChangeNotifier {
         state.financialRecords.removeAt(recoverIndex(financialRecord.id) + 1);
 
         list = state.financialRecords;
+        fetchRecords(type);
         list.sort((FinancialRecordModel a, FinancialRecordModel b) => b.date.compareTo(a.date));
-        fetchRecords(type == 'E' ? 'ENTRADA' : 'SAIDA');
       }
     }
     notifyListeners();
