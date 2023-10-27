@@ -435,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                                                   },
                                                   locale: const Locale('pt', 'BR'),
                                                   context: context,
-                                                  initialDate: DateTime.now(),
+                                                  initialDate: dateTime,
                                                   firstDate: DateTime(2001),
                                                   lastDate: DateTime(2101),
                                                 );

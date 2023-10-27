@@ -42,6 +42,7 @@ class UserService {
       if (response.statusCode == 200) {
         await sharedPreferences.setString('access_token', (response.data)['access_token']);
         await sharedPreferences.setString('refresh_token', (response.data)['refresh_token']);
+        await sharedPreferences.setString('email', email);
         return true;
       } else {
         return false;

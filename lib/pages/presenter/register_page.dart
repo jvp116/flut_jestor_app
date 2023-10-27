@@ -1,3 +1,4 @@
+import 'package:flut_jestor_app/pages/presenter/home_page.dart';
 import 'package:flut_jestor_app/shared/components/custom_text_form_field_widget.dart';
 import 'package:flut_jestor_app/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +167,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   if (controller.formKey.currentState!.validate()) {
                                     controller.register(service, controller.emailController.text, controller.passwordController.text).then((value) {
                                       if (controller.isValidUser) {
-                                        Navigator.pushReplacementNamed(context, '/home');
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) => HomePage(
+                                              email: controller.emailController.text,
+                                            ),
+                                          ),
+                                        );
                                       }
                                     }).onError((error, stackTrace) {
                                       controller.passwordController.clear();
